@@ -12,12 +12,12 @@ export default function Lab1LandingPage() {
             </ul>
 
 
-             {/* Link to the Kambaz application */}
-             <p>
+            {/* Link to the Kambaz application */}
+            <p>
                 <Link to="/">Go to Kambaz Application</Link>
             </p>
 
- 
+
 
             {/* Links to all relevant source code repositories */}
             <a
@@ -189,52 +189,52 @@ export default function Lab1LandingPage() {
                     <h5>Radio buttons</h5>
                     <label>Favorite movie genre:</label> <br />
                     <input
-                    type="radio"
-                    name="radio-genre"
-                    id="wd-radio-comedy"
-                    value="Comedy"
-                />
-                <label htmlFor="wd-radio-comedy">Comedy</label> <br />
+                        type="radio"
+                        name="radio-genre"
+                        id="wd-radio-comedy"
+                        value="Comedy"
+                    />
+                    <label htmlFor="wd-radio-comedy">Comedy</label> <br />
 
-                <input
-                    type="radio"
-                    name="radio-genre"
-                    id="wd-radio-drama"
-                    value="Drama"
-                />
-                <label htmlFor="wd-radio-drama">Drama</label> <br />
+                    <input
+                        type="radio"
+                        name="radio-genre"
+                        id="wd-radio-drama"
+                        value="Drama"
+                    />
+                    <label htmlFor="wd-radio-drama">Drama</label> <br />
 
-                <input
-                    type="radio"
-                    name="radio-genre"
-                    id="wd-radio-scifi"
-                    value="Science Fiction"
-                    defaultChecked
-                />
-                <label htmlFor="wd-radio-scifi">Science Fiction</label> <br />
+                    <input
+                        type="radio"
+                        name="radio-genre"
+                        id="wd-radio-scifi"
+                        value="Science Fiction"
+                        defaultChecked
+                    />
+                    <label htmlFor="wd-radio-scifi">Science Fiction</label> <br />
 
-                <input
-                    type="radio"
-                    name="radio-genre"
-                    id="wd-radio-fantasy"
-                    value="Fantasy"
-                />
-                <label htmlFor="wd-radio-fantasy">Fantasy</label>
+                    <input
+                        type="radio"
+                        name="radio-genre"
+                        id="wd-radio-fantasy"
+                        value="Fantasy"
+                    />
+                    <label htmlFor="wd-radio-fantasy">Fantasy</label>
                 </div>
 
                 <h5 id="wd-checkboxes">Checkboxes</h5>
-                <label>Favorite movie genre:</label><br/>
+                <label>Favorite movie genre:</label><br />
 
-                <input type="checkbox" name="check-genre" id="wd-chkbox-comedy"/>
-                <label htmlFor="wd-chkbox-comedy">Comedy</label><br/>
+                <input type="checkbox" name="check-genre" id="wd-chkbox-comedy" />
+                <label htmlFor="wd-chkbox-comedy">Comedy</label><br />
 
-                <input type="checkbox" name="check-genre" id="wd-chkbox-drama"/>
-                <label htmlFor="wd-chkbox-drama">Drama</label><br/>
+                <input type="checkbox" name="check-genre" id="wd-chkbox-drama" />
+                <label htmlFor="wd-chkbox-drama">Drama</label><br />
 
-                <input type="checkbox" name="check-genre" id="wd-chkbox-scifi"/>
-                <label htmlFor="wd-chkbox-scifi">Science Fiction</label><br/>
+                <input type="checkbox" name="check-genre" id="wd-chkbox-scifi" />
+                <label htmlFor="wd-chkbox-scifi">Science Fiction</label><br />
 
-                <input type="checkbox" name="check-genre" id="wd-chkbox-fantasy"/>
+                <input type="checkbox" name="check-genre" id="wd-chkbox-fantasy" />
                 <label htmlFor="wd-chkbox-fantasy">Fantasy</label>
 
                 <div id="wd-dropdowns">
@@ -260,51 +260,51 @@ export default function Lab1LandingPage() {
                 </div>
 
                 <div id="wd-forms">
-                <h4>Other HTML field types</h4>
+                    <h4>Other HTML field types</h4>
 
-                <form id="wd-other-fields">
-                    {/* Email field */}
-                    <label htmlFor="wd-text-fields-email">Email: </label>
-                    <input
-                        type="email"
-                        placeholder="jdoe@somewhere.com"
-                        id="wd-text-fields-email"
-                    />
-                    <br />
+                    <form id="wd-other-fields">
+                        {/* Email field */}
+                        <label htmlFor="wd-text-fields-email">Email: </label>
+                        <input
+                            type="email"
+                            placeholder="jdoe@somewhere.com"
+                            id="wd-text-fields-email"
+                        />
+                        <br />
 
-                    {/* Number field */}
-                    <label htmlFor="wd-text-fields-salary-start">Starting salary: </label>
-                    <input
-                        type="number"
-                        value="100000"
-                        placeholder="1000"
-                        id="wd-text-fields-salary-start"
-                    />
-                    <br />
+                        {/* Number field */}
+                        <label htmlFor="wd-text-fields-salary-start">Starting salary: </label>
+                        <input
+                            type="number"
+                            value="100000"
+                            placeholder="1000"
+                            id="wd-text-fields-salary-start"
+                        />
+                        <br />
 
-                    {/* Range field */}
-                    <label htmlFor="wd-text-fields-rating">Rating: </label>
-                    <input
-                        type="range"
-                        value="4"
-                        min="1"
-                        max="5"
-                        id="wd-text-fields-rating"
-                    />
-                    <br />
+                        {/* Range field */}
+                        <label htmlFor="wd-text-fields-rating">Rating: </label>
+                        <input
+                            type="range"
+                            value="4"
+                            min="1"
+                            max="5"
+                            id="wd-text-fields-rating"
+                        />
+                        <br />
 
-                    {/* Date field */}
-                    <label htmlFor="wd-text-fields-dob">Date of birth: </label>
-                    <input
-                        type="date"
-                        value="2000-01-21"
-                        id="wd-text-fields-dob"
-                    />
-                    <br />
-                </form>
-            </div>
+                        {/* Date field */}
+                        <label htmlFor="wd-text-fields-dob">Date of birth: </label>
+                        <input
+                            type="date"
+                            value="2000-01-21"
+                            id="wd-text-fields-dob"
+                        />
+                        <br />
+                    </form>
+                </div>
 
-                
+
                 <div id="wd-anchor">
                     <h4>Anchor tag</h4>
                     <p>
@@ -332,8 +332,8 @@ export default function Lab1LandingPage() {
                         .
                     </p>
                 </div>
-                
-                
+
+
 
 
 
@@ -341,3 +341,4 @@ export default function Lab1LandingPage() {
         </div>
     );
 }
+

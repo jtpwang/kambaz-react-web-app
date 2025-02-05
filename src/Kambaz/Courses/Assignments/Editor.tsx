@@ -1,218 +1,167 @@
+import {
+    Button,
+    Col,
+    Form,
+    Container,
+    Row
+} from "react-bootstrap";
+
+
 export default function AssignmentEditor() {
     return (
-        <div id="wd-assignments-editor" style={{ maxWidth: '500px', margin: '0 auto' }}>
-            <div style={{ marginBottom: '20px' }}>
-                <label
-                    htmlFor="wd-name"
-                    style={{
-                        display: 'block',
-                        fontWeight: 'bold',
-                        marginBottom: '5px',
-                        fontSize: '16px',
-                    }}
-                >
-                    Assignment Name
-                </label>
-                <input
-                    id="wd-name"
-                    value="A1 - ENV + HTML"
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                        padding: '8px',
-                        fontSize: '14px',
-                    }}
-                />
-            </div>
-            <div style={{ marginBottom: '20px' }}>
-                <textarea
-                    id="wd-description"
-                    style={{
-                        display: 'block',
-                        width: '100%',
-                        height: '120px',
-                        padding: '8px',
-                        fontSize: '14px',
-                    }}
-                >
-                    The assignment is available online Submit a link to the
-                    landing page of your Web application running on Netlify. The
-                    landing page should include the following: - Your full name
-                    and section - Links to each of the lab assignments - Link to
-                    the Kambaz application - Links to all relevant source code
-                    repositories - The Kambaz application should include a link
-                    to navigate back to the landing page.
-                </textarea>
-            </div>
-            <table style={{ width: '100%', marginBottom: '20px' }}>
-                <tbody>
-                    <tr>
-                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
-                            <label htmlFor="wd-points">Points</label>
-                        </td>
-                        <td>
-                            <input
-                                id="wd-points"
-                                type="number"
-                                value={100}
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    fontSize: '14px',
-                                }}
-                            />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
-                            <label htmlFor="wd-group">Assignment Group</label>
-                        </td>
-                        <td>
-                            <select
-                                id="wd-group"
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    fontSize: '14px',
-                                }}
-                            >
-                                <option value="ASSIGNMENTS">ASSIGNMENTS</option>
-                                <option value="QUIZZES">QUIZZES</option>
-                                <option value="EXAMS">EXAMS</option>
-                                <option value="PROJECTS">PROJECTS</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
-                            <label htmlFor="wd-display-grade-as">Display Grade as</label>
-                        </td>
-                        <td>
-                            <select
-                                id="wd-display-grade-as"
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    fontSize: '14px',
-                                }}
-                            >
-                                <option value="Percentage">Percentage</option>
-                                <option value="Complete/Incomplete">Complete/Incomplete</option>
-                                <option value="Letter Grade">Letter Grade</option>
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
-                            <label htmlFor="wd-submission-type">Submission Type</label>
-                        </td>
-                        <td>
-                            <select
-                                id="wd-submission-type"
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    fontSize: '14px',
-                                }}
-                            >
-                                <option value="Online">Online</option>
-                                <option value="On Paper">On Paper</option>
-                                <option value="No Submission">No Submission</option>
-                            </select>
-                            <div style={{ marginTop: '10px' }}>
-                                <label style={{ display: 'block', marginBottom: '5px' }}>
-                                    <input type="checkbox" id="wd-text-entry" /> Text Entry
-                                </label>
-                                <label style={{ display: 'block', marginBottom: '5px' }}>
-                                    <input type="checkbox" id="wd-website-url" /> Website URL
-                                </label>
-                                <label style={{ display: 'block', marginBottom: '5px' }}>
-                                    <input type="checkbox" id="wd-media-recordings" /> Media
-                                    Recordings
-                                </label>
-                                <label style={{ display: 'block', marginBottom: '5px' }}>
-                                    <input type="checkbox" id="wd-student-annotation" /> Student
-                                    Annotation
-                                </label>
-                                <label style={{ display: 'block', marginBottom: '5px' }}>
-                                    <input type="checkbox" id="wd-file-upload" /> File Uploads
-                                </label>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
-                            <label htmlFor="wd-assign-to">Assign To</label>
-                        </td>
-                        <td>
-                            <input
-                                id="wd-assign-to"
-                                value="Everyone"
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    fontSize: '14px',
-                                }}
-                            />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
-                            <label htmlFor="wd-due-date">Due</label>
-                        </td>
-                        <td>
-                            <input
-                                id="wd-due-date"
+        <Container id="wd-assignments-editor">
+            <Form className="p-3 border fs-5 wd-assignments-editor">
+                <Form.Group
+                    className="mb-3"
+                    controlId="wd-name">
+                    <Form.Label>Assignment Name</Form.Label>
+                    <Form.Control
+                        type="text"
+                        placeholder="A1 - ENV + HTML" />
+                </Form.Group>
+                <Form.Group
+                    className="mb-3"
+                    controlId="wd-description">
+                    <Form.Label>Description</Form.Label>
+                    <Form.Control as="textarea" rows={5}
+                        placeholder="The assignment is available online Submit a link to the landing page of 
+                        your Web application running on Netlify. The landing page should include the following:
+                         - Your full name and section - Links to each of the lab assignments - Link to the Kambaz
+                          application - Links to all relevant source code repositories - The Kambaz application 
+                          should include a link to navigate back to the landing page." />
+                </Form.Group>
+                <Form.Group
+                    className="mb-3 d-flex"
+                    controlId="wd-points">
+                    <Form.Label
+                        className="me-3 w-50 text-end">Points</Form.Label>
+                    <Form.Control
+                        type="number"
+                        placeholder="100" />
+                </Form.Group>
+                <Form.Group
+                    className="mb-3 d-flex"
+                    controlId="wd-group">
+                    <Form.Label
+                        className="me-3 w-50 text-end">Assignment Group</Form.Label>
+                    <Form.Select
+                        aria-label="Select Assignment Group">
+                        <option value="1">ASSIGNMENTS</option>
+                        <option value="2">Quiz</option>
+                        <option value="3">Project</option>
+                    </Form.Select>
+                </Form.Group>
+                <Form.Group
+                    className="mb-3 d-flex"
+                    controlId="wd-display-grade-as">
+                    <Form.Label
+                        className="me-3 w-50 text-end">Display Grade as</Form.Label>
+                    <Form.Select
+                        aria-label="Select Display Grade as">
+                        <option value="1">Percentage</option>
+                        <option value="2">Points</option>
+                    </Form.Select>
+                </Form.Group>
+                <Form.Group
+                    className="mb-3 d-flex"
+                    controlId="wd-submission-type">
+                    <Form.Label
+                        className="me-3 w-50 text-end">Submission Type</Form.Label>
+                    <Form.Group
+                        className="p-3 mb-3 w-100 border"
+                        controlId="wd-online-entry-options">
+                        <Form.Select
+                            aria-label="Select Submission Type">
+                            <option value="1">Online</option>
+                            <option value="2">In Person</option>
+                            <option value="3">External Tool</option>
+                        </Form.Select>
+                        <Form.Label>Online Entry Options</Form.Label>
+                        <Form.Check
+                            type="checkbox"
+                            label="Text Entry"
+                            id="wd-text-entry" />
+                        <Form.Check
+                            type="checkbox"
+                            label="Website URL"
+                            id="wd-website-url" />
+                        <Form.Check
+                            type="checkbox"
+                            label="File Upload"
+                            id="wd-file-upload" />
+                        <Form.Check
+                            type="checkbox"
+                            label="Media Recordings"
+                            id="wd-media-recordings" />
+                        <Form.Check
+                            type="checkbox"
+                            label="Student Annotation"
+                            id="wd-student-annotation" />
+                    </Form.Group>
+                </Form.Group>
+                <Form.Group
+                    className="mb-3 d-flex"
+                    controlId="wd-assign-to">
+                    <Form.Label
+                        className="me-3 w-50 text-end">Assign</Form.Label>
+                    <Form.Group
+                        className="p-3 mb-3 w-100 border"
+                        controlId="wd-assign-to">
+                        <Form.Label
+                            className="me-3">Assign to</Form.Label>
+                        <Form.Control
+                            type="text"
+                            placeholder="Everyone" />
+                        <Form.Group
+                            className="mt-2"
+                            controlId="wd-due-date">
+                            <Form.Label>Due</Form.Label>
+                            <Form.Control
                                 type="date"
-                                value="2024-05-13"
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    fontSize: '14px',
-                                }}
-                            />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
-                            <label htmlFor="wd-available-from">Available from</label>
-                        </td>
-                        <td>
-                            <input
-                                id="wd-available-from"
-                                type="date"
-                                value="2024-05-06"
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    fontSize: '14px',
-                                }}
-                            />
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
-                            <label htmlFor="wd-available-until">Until</label>
-                        </td>
-                        <td>
-                            <input
-                                id="wd-available-until"
-                                type="date"
-                                value="2024-05-20"
-                                style={{
-                                    width: '100%',
-                                    padding: '8px',
-                                    fontSize: '14px',
-                                }}
-                            />
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div style={{ textAlign: 'center' }}>
-                <button style={{ marginRight: '10px', padding: '8px 12px' }}>Cancel</button>
-                <button style={{ padding: '8px 12px' }}>Save</button>
-            </div>
-        </div>
+                                placeholder="2024-05-13" />
+                        </Form.Group>
+                        <Form.Group
+                            className="mt-2 d-flex justify-content-end">
+                            <Form.Group
+                                className="w-50"
+                                controlId="wd-available-from">
+                                <Form.Label>Available From</Form.Label>
+                                <Form.Control
+                                    type="date"
+                                    placeholder="2024-05-10" />
+                            </Form.Group>
+                            <Form.Group
+                                className="ms-2 w-50"
+                                controlId="wd-available-until">
+                                <Form.Label
+                                    className="me-2">Until</Form.Label>
+                                <Form.Control
+                                    type="date"
+                                    placeholder="2024-05-20" />
+                            </Form.Group>
+                        </Form.Group>
+                    </Form.Group>
+                </Form.Group>
+                <hr />
+                <Form.Group className="d-flex justify-content-end">
+                    <Row>
+                        <Col>
+                            <Button
+                                variant="secondary"
+                                size="lg"
+                                id="wd-cancel">Cancel
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button
+                                variant="secondary"
+                                className="bg-danger text-white"
+                                size="lg" id="wd-save">Save
+                            </Button>
+                        </Col>
+                    </Row>
+                </Form.Group>
+            </Form>
+        </Container>
     );
 }

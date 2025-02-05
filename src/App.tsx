@@ -1,6 +1,4 @@
-import Lab1 from "./Labs/Lab1";
-import Lab2 from "./Labs/Lab2";
-import Lab3 from "./Labs/Lab3";
+import Labs from "./Labs";
 import Kambaz from "./Kambaz";
 import { HashRouter, Route, Routes, Navigate } from "react-router-dom";
 
@@ -15,13 +13,8 @@ export default function App() {
           {/* Kambaz Application */}
           <Route path="/Kambaz/*" element={<Kambaz />} />
 
-          {/* Redirect /Labs to /labs/lab1 */}
-          <Route path="/Labs" element={<Navigate to="/labs/lab1" />} />
-
-          {/* Individual Labs */}
-          <Route path="/labs/lab1" element={<Lab1 />} />
-          <Route path="/labs/lab2" element={<Lab2 />} />
-          <Route path="/labs/lab3" element={<Lab3 />} />
+          {/* Redirect /Labs*/}
+          <Route path="/Labs/*" element={<Labs />} />
         </Routes>
       </div>
     </HashRouter>
