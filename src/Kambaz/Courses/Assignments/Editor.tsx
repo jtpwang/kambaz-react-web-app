@@ -6,7 +6,6 @@ import {
     Row
 } from "react-bootstrap";
 
-
 export default function AssignmentEditor() {
     return (
         <Container id="wd-assignments-editor">
@@ -24,11 +23,7 @@ export default function AssignmentEditor() {
                     controlId="wd-description">
                     <Form.Label>Description</Form.Label>
                     <Form.Control as="textarea" rows={5}
-                        placeholder="The assignment is available online Submit a link to the landing page of 
-                        your Web application running on Netlify. The landing page should include the following:
-                         - Your full name and section - Links to each of the lab assignments - Link to the Kambaz
-                          application - Links to all relevant source code repositories - The Kambaz application 
-                          should include a link to navigate back to the landing page." />
+                        placeholder="The assignment is available online Submit a link to the landing page of your Web application running on Netlify. The landing page should include the following:Your full name and section - Links to each of the lab assignments - Link to the Kambazapplication - Links to all relevant source code repositories - The Kambaz application should include a link to navigate back to the landing page." />
                 </Form.Group>
                 <Form.Group
                     className="mb-3 d-flex"
@@ -47,8 +42,9 @@ export default function AssignmentEditor() {
                     <Form.Select
                         aria-label="Select Assignment Group">
                         <option value="1">ASSIGNMENTS</option>
-                        <option value="2">Quiz</option>
-                        <option value="3">Project</option>
+                        <option value="2">Quizzes</option>
+                        <option value="3">Projects</option>
+                        <option value="4">Exams</option>
                     </Form.Select>
                 </Form.Group>
                 <Form.Group
@@ -59,7 +55,8 @@ export default function AssignmentEditor() {
                     <Form.Select
                         aria-label="Select Display Grade as">
                         <option value="1">Percentage</option>
-                        <option value="2">Points</option>
+                        <option value="2">Complete/Incomplete</option>
+                        <option value="3">Letter Grade</option>
                     </Form.Select>
                 </Form.Group>
                 <Form.Group

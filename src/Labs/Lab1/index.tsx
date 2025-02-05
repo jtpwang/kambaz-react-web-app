@@ -3,21 +3,17 @@ import { Link } from 'react-router-dom';
 export default function Lab1LandingPage() {
     return (
         <div id="wd-lab1-landing">
-            <h1>Lab 1: Landing Page</h1>
-            <p>Name: Tzu Ping Wang</p>
-            <p>Section: CS5610.35649.202530</p>
-            <ul>
+            {/* <h1>Lab 1: Landing Page</h1> */}
+            <h3>Name: Tzu Ping Wang</h3>
+            <h3>Section: CS5610.35649.202530</h3>
+            {/* <ul>
                 <li><Link to="/labs/lab2">Lab 2</Link></li>
                 <li><Link to="/labs/lab3">Lab 3</Link></li>
-            </ul>
+            </ul> */}
 
-
-            {/* Link to the Kambaz application */}
             <p>
                 <Link to="/">Go to Kambaz Application</Link>
             </p>
-
-
 
             {/* Links to all relevant source code repositories */}
             <a
@@ -30,7 +26,6 @@ export default function Lab1LandingPage() {
 
             <br />
             <br />
-
             <Link to="/">Back to Kambaz Application</Link>
 
             <hr />
