@@ -109,6 +109,7 @@ export default function AssignmentEditor() {
                         <Form.Control
                             type="text"
                             placeholder="Everyone" />
+
                         <Form.Group
                             className="mt-2"
                             controlId="wd-due-date">
