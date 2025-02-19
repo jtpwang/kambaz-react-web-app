@@ -12,7 +12,9 @@ export default function House() {
         },
         owners: ["Alice", "Bob"],
     };
+    console.log(house);
     return (
+
         <div id="wd-house">
             <h4>House</h4>
             <h5>bedrooms</h5>

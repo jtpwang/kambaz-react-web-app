@@ -1,165 +1,196 @@
+
 import {
     Button,
-    Col,
-    Form,
-    Container,
-    Row
+    FormCheck,
+    FormControl,
+    FormGroup,
+    FormLabel,
+    FormSelect,
 } from "react-bootstrap";
 
+import FormCheckLabel from "react-bootstrap/FormCheckLabel";
+import FormCheckInput from "react-bootstrap/FormCheckInput";
+import { assignments } from "../../Database";
+
+import { Link, useParams } from "react-router-dom";
+
 export default function AssignmentEditor() {
+    const { aid, cid } = useParams();
+    const assignment = assignments.find((assignment) => assignment._id === aid);
     return (
-        <Container id="wd-assignments-editor">
-            <Form className="p-3 border fs-5 wd-assignments-editor">
-                <Form.Group
-                    className="mb-3"
-                    controlId="wd-name">
-                    <Form.Label>Assignment Name</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="A1 - ENV + HTML" />
-                </Form.Group>
-                <Form.Group
-                    className="mb-3"
-                    controlId="wd-description">
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" rows={5}
-                        placeholder="The assignment is available online Submit a link to the landing page of your Web application running on Netlify. The landing page should include the following:Your full name and section - Links to each of the lab assignments - Link to the Kambazapplication - Links to all relevant source code repositories - The Kambaz application should include a link to navigate back to the landing page." />
-                </Form.Group>
-                <Form.Group
-                    className="mb-3 d-flex"
-                    controlId="wd-points">
-                    <Form.Label
-                        className="me-3 w-50 text-end">Points</Form.Label>
-                    <Form.Control
-                        type="number"
-                        placeholder="100" />
-                </Form.Group>
-                <Form.Group
-                    className="mb-3 d-flex"
-                    controlId="wd-group">
-                    <Form.Label
-                        className="me-3 w-50 text-end">Assignment Group</Form.Label>
-                    <Form.Select
-                        aria-label="Select Assignment Group">
+        <div id="wd-assignments-editor" className="me-3 ms-3">
+            <div className="row mb-3">
+                <FormGroup>
+                    <FormLabel htmlFor="wd-name">Assignment Name </FormLabel>
+                    <FormControl
+                        id="wd-name"
+                        defaultValue={assignment && assignment.title}
+                    />
+                </FormGroup>
+            </div>
+            <div className="row mb-3">
+                <div>
+                    <FormControl as="textarea" id="wd-description">
+                        {assignment && assignment.description}
+                    </FormControl>
+                </div>
+            </div>
+            <FormGroup controlId="wd-assignment-editor-points" className="row mb-3">
+                <FormLabel className="wd-assignment-editor-label col-4 col-form-label">
+                    Points
+                </FormLabel>
+                <div className="col-8">
+                    <FormControl defaultValue={assignment && assignment.points} />
+                </div>
+            </FormGroup>
+            <FormGroup className="row mb-3" controlId="wd-group">
+                <FormLabel className="wd-assignment-editor-label col-4 col-form-label">
+                    Assignment Group
+                </FormLabel>
+                <div className="col-8">
+                    <FormSelect>
                         <option value="1">ASSIGNMENTS</option>
                         <option value="2">Quizzes</option>
                         <option value="3">Projects</option>
                         <option value="4">Exams</option>
-                    </Form.Select>
-                </Form.Group>
-                <Form.Group
-                    className="mb-3 d-flex"
-                    controlId="wd-display-grade-as">
-                    <Form.Label
-                        className="me-3 w-50 text-end">Display Grade as</Form.Label>
-                    <Form.Select
-                        aria-label="Select Display Grade as">
+                    </FormSelect>
+                </div>
+            </FormGroup>
+            <FormGroup className="row mb-3" controlId="wd-display-grade-as">
+                <FormLabel className="wd-assignment-editor-label col-4 col-form-label">
+                    Display grade as
+                </FormLabel>
+                <div className="col-8">
+                    <FormSelect>
                         <option value="1">Percentage</option>
                         <option value="2">Complete/Incomplete</option>
                         <option value="3">Letter Grade</option>
-                    </Form.Select>
-                </Form.Group>
-                <Form.Group
-                    className="mb-3 d-flex"
-                    controlId="wd-submission-type">
-                    <Form.Label
-                        className="me-3 w-50 text-end">Submission Type</Form.Label>
-                    <Form.Group
-                        className="p-3 mb-3 w-100 border"
-                        controlId="wd-online-entry-options">
-                        <Form.Select
-                            aria-label="Select Submission Type">
-                            <option value="1">Online</option>
-                            <option value="2">In Person</option>
-                            <option value="3">External Tool</option>
-                        </Form.Select>
-                        <Form.Label>Online Entry Options</Form.Label>
-                        <Form.Check
-                            type="checkbox"
-                            label="Text Entry"
-                            id="wd-text-entry" />
-                        <Form.Check
-                            type="checkbox"
-                            label="Website URL"
-                            id="wd-website-url" />
-                        <Form.Check
-                            type="checkbox"
-                            label="File Upload"
-                            id="wd-file-upload" />
-                        <Form.Check
-                            type="checkbox"
-                            label="Media Recordings"
-                            id="wd-media-recordings" />
-                        <Form.Check
-                            type="checkbox"
-                            label="Student Annotation"
-                            id="wd-student-annotation" />
-                    </Form.Group>
-                </Form.Group>
-                <Form.Group
-                    className="mb-3 d-flex"
-                    controlId="wd-assign-to">
-                    <Form.Label
-                        className="me-3 w-50 text-end">Assign</Form.Label>
-                    <Form.Group
-                        className="p-3 mb-3 w-100 border"
-                        controlId="wd-assign-to">
-                        <Form.Label
-                            className="me-3">Assign to</Form.Label>
-                        <Form.Control
-                            type="text"
-                            placeholder="Everyone" />
-
-                        <Form.Group
-                            className="mt-2"
-                            controlId="wd-due-date">
-                            <Form.Label>Due</Form.Label>
-                            <Form.Control
+                    </FormSelect>
+                </div>
+            </FormGroup>
+            <div className="row mb-3">
+                <FormLabel
+                    htmlFor="wd-submission-type"
+                    className="col-4 wd-assignment-editor-label col-form-label"
+                >
+                    Submission Type
+                </FormLabel>
+                <div className="col-8">
+                    <div className="border-1 border rounded-2 p-2">
+                        <div className="mb-3">
+                            <FormSelect id="wd-submission-type">
+                                <option value="1">Online</option>
+                                <option value="2">In Person</option>
+                                <option value="3">External Tool</option>
+                            </FormSelect>
+                        </div>
+                        <FormGroup controlId="online-entry-options" className="mb-3">
+                            <FormLabel className="fw-bold mb-1">
+                                Online Entry Options
+                            </FormLabel>
+                            <FormCheck className="mb-3">
+                                <FormCheckLabel htmlFor="wd-text-entry">
+                                    Text Entry
+                                </FormCheckLabel>
+                                <FormCheckInput
+                                    id="wd-text-entry"
+                                    name="online-entry-options"
+                                />
+                            </FormCheck>
+                            <FormCheck className="mb-3">
+                                <FormCheckLabel htmlFor="wd-website-url">
+                                    Website URL
+                                </FormCheckLabel>
+                                <FormCheckInput
+                                    id="wd-website-url"
+                                    name="online-entry-options"
+                                />
+                            </FormCheck>
+                            <FormCheck className="mb-3">
+                                <FormCheckLabel htmlFor="wd-media-recordings">
+                                    Media Recordings
+                                </FormCheckLabel>
+                                <FormCheckInput
+                                    id="wd-media-recordings"
+                                    name="online-entry-options"
+                                />
+                            </FormCheck>
+                            <FormCheck className="mb-3">
+                                <FormCheckLabel htmlFor="wd-student-annotation">
+                                    Student Annotation
+                                </FormCheckLabel>
+                                <FormCheckInput
+                                    id="wd-student-annotation"
+                                    name="online-entry-options"
+                                />
+                            </FormCheck>
+                            <FormCheck className="mb-3">
+                                <FormCheckLabel htmlFor="wd-file-upload">
+                                    File Uploads
+                                </FormCheckLabel>
+                                <FormCheckInput
+                                    id="wd-file-upload"
+                                    name="online-entry-options"
+                                />
+                            </FormCheck>
+                        </FormGroup>
+                    </div>
+                </div>
+            </div>
+            <div className="row mb-4">
+                <FormLabel className="wd-assignment-editor-label col-4 col-form-label">
+                    Assign
+                </FormLabel>
+                <div className="col-8">
+                    <div className="border border-1 rounded-2 p-2">
+                        <FormGroup controlId="wd-assign-to" className="mb-3">
+                            <FormLabel className="fw-bold mb-1">Assign To</FormLabel>
+                            <FormControl defaultValue="Everyone" />
+                        </FormGroup>
+                        <FormGroup controlId="wd-due-date" className="mb-3">
+                            <FormLabel className="fw-bold mb-1">Due</FormLabel>
+                            <FormControl
                                 type="date"
-                                placeholder="2024-05-13" />
-                        </Form.Group>
-                        <Form.Group
-                            className="mt-2 d-flex justify-content-end">
-                            <Form.Group
-                                className="w-50"
-                                controlId="wd-available-from">
-                                <Form.Label>Available From</Form.Label>
-                                <Form.Control
-                                    type="date"
-                                    placeholder="2024-05-10" />
-                            </Form.Group>
-                            <Form.Group
-                                className="ms-2 w-50"
-                                controlId="wd-available-until">
-                                <Form.Label
-                                    className="me-2">Until</Form.Label>
-                                <Form.Control
-                                    type="date"
-                                    placeholder="2024-05-20" />
-                            </Form.Group>
-                        </Form.Group>
-                    </Form.Group>
-                </Form.Group>
-                <hr />
-                <Form.Group className="d-flex justify-content-end">
-                    <Row>
-                        <Col>
-                            <Button
-                                variant="secondary"
-                                size="lg"
-                                id="wd-cancel">Cancel
-                            </Button>
-                        </Col>
-                        <Col>
-                            <Button
-                                variant="secondary"
-                                className="bg-danger text-white"
-                                size="lg" id="wd-save">Save
-                            </Button>
-                        </Col>
-                    </Row>
-                </Form.Group>
-            </Form>
-        </Container>
+                                defaultValue={assignment && assignment.due}
+                            />
+                        </FormGroup>
+                        <div className="row">
+                            <div className="col-6">
+                                <FormGroup controlId="wd-available-from">
+                                    <FormLabel className="fw-bold mb-1">Available From</FormLabel>
+                                    <FormControl
+                                        type="date"
+                                        defaultValue={assignment && assignment.availableFrom}
+                                    />
+                                </FormGroup>
+                            </div>
+                            <div className="col-6">
+                                <FormGroup controlId="wd-available-until">
+                                    <FormLabel className="fw-bold mb-1">
+                                        Available Until
+                                    </FormLabel>
+                                    <FormControl
+                                        type="date"
+                                        defaultValue={assignment && assignment.availableUntil}
+                                    />
+                                </FormGroup>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className="float-end mb-3">
+                <div className="d-flex">
+                    <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+                        <Button variant="secondary" className="me-1">
+                            Cancel
+                        </Button>
+                    </Link>
+                    <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+                        <Button variant="danger">Save</Button>
+                    </Link>
+                </div>
+            </div>
+        </div>
     );
 }
