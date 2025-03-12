@@ -1,7 +1,6 @@
 import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-
 export default function Signin() {
   return (
     <div id="wd-signin-screen">
@@ -31,3 +30,4 @@ export default function Signin() {
     </div>
   );
 }
+

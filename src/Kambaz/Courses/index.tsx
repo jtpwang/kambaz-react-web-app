@@ -1,29 +1,27 @@
-import { Route, Routes, useLocation } from "react-router";
+import { Route, Routes, useLocation, useParams, Navigate } from "react-router";
 import CourseNavigation from "./Navigation.tsx";
-import { Navigate, useParams } from "react-router-dom";
 import Modules from "./Modules";
 import Home from "./Home";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor.tsx";
 import { FaAlignJustify } from "react-icons/fa";
 import PeopleTable from "./People/Table.tsx";
-import { courses } from "../Database";
 
-export default function Courses() {
+export default function Courses({ courses }: { courses: any[];  }) {
     const { cid } = useParams();
     const { pathname } = useLocation();
     const course = courses.find((course) => course._id === cid);
+    
     return (
         <div id="wd-courses">
             <div className="mt-3 d-none d-md-block">
                 <h2 className="text-danger">
-                    <FaAlignJustify className=" fs-4 me-4" />
+                    <FaAlignJustify className="fs-4 me-4" />
                     {course && course.name} &gt; {pathname.split("/")[4]}
                     <hr />
                 </h2>
             </div>
             <div className="d-md-none sticky-top">
-
             </div>
             <div className="d-flex">
                 <div className="d-none d-md-block">

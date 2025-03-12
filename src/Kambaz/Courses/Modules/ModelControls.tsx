@@ -1,8 +1,14 @@
+import { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
 import { Button, Dropdown } from "react-bootstrap";
+import ModuleEditor from "./ModuleEditor"; // Import the ModuleEditor component
 
-export default function ModulesControls() {
+export default function ModulesControls(
+    { moduleName, setModuleName, addModule }:
+    { moduleName: string; setModuleName: (title: string) => void; addModule: () => void; }) {
+    const [showModuleEditor, setShowModuleEditor] = useState(false);
+
     return (
         <div id="wd-modules-controls" className="d-flex justify-content-end gap-2">
             <Button variant="secondary" size="lg" id="wd-collapse-all">
@@ -37,11 +43,31 @@ export default function ModulesControls() {
                     </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
-            <Button variant="danger" size="lg" id="wd-add-module-btn">
+
+            {/* Button to open ModuleEditor */}
+            <Button
+                variant="danger"
+                size="lg"
+                id="wd-add-module-btn"
+                onClick={() => setShowModuleEditor(true)}
+            >
                 <FaPlus className="position-relative me-2" style={{ bottom: "1px" }} />
                 Module
             </Button>
+
+            {/* Module Editor Modal */}
+            {showModuleEditor && (
+                <ModuleEditor
+                    dialogTitle="Add Module"
+                    moduleName={moduleName}
+                    setModuleName={setModuleName}
+                    addModule={() => {
+                        addModule();
+                        setShowModuleEditor(false); // Close modal after adding
+                    }}
+                    onClose={() => setShowModuleEditor(false)}
+                />
+            )}
         </div>
     );
 }
-
