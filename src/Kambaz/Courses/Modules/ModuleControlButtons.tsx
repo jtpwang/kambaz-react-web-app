@@ -1,30 +1,14 @@
-import { FaTrash } from "react-icons/fa";
 import { IoEllipsisVertical } from "react-icons/io5";
-import { BsPlus } from "react-icons/bs";
-import { FaPencil } from "react-icons/fa6";
+
 import GreenCheckmark from "./GreenCheckmark";
+import { BsPlus } from "react-icons/bs";
 
-export default function ModuleControlButtons({ moduleId, deleteModule, editModule }: {
-    moduleId: string; deleteModule: (moduleId: string) => void;
-    editModule: (moduleId: string) => void
-}) {
-
+export default function ModuleControlButtons() {
     return (
-        <div className="float-end d-flex align-items-center gap-2">
-            {/* Edit Module Button */}
-            <FaPencil
-                className="text-primary fs-5 cursor-pointer"
-                onClick={() => editModule(moduleId)}
-            />
-            {/* Delete Module Button */}
-            <FaTrash
-                className="text-danger fs-5 cursor-pointer"
-                onClick={() => deleteModule(moduleId)}
-            />
+        <div className="float-end">
             <GreenCheckmark />
-            <BsPlus className="fs-4" />
+            <BsPlus className="fs-4 ms-2" />
             <IoEllipsisVertical className="fs-4" />
         </div>
     );
 }
-
