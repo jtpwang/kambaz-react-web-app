@@ -1,39 +1,38 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate }
+  from "react-router";
 import Account from "./Account";
-import Dashboard from "./Dashboard"; 
+import Dashboard from "./Dashboard";
 import KambazNavigation from "./Navigation";
 import Courses from "./Courses";
-import Home from "./Courses/Home"; 
-import "./Kambaz.css"; 
 import * as db from "./Database";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import ProtectedRoute from "./Account/ProtectedRoute";
 
 export default function Kambaz() {
-  // State variables moved from Dashboard
   const [courses, setCourses] = useState<any[]>(db.courses);
   const [course, setCourse] = useState<any>({
-    id: "1234",
-    name: "New Course",
-    number: "New Number",
-    startDate: "2023-09-10",
-    endDate: "2023-12-15",
+    _id: "", name: "New Course", number: "New Number",
+    startDate: "2023-09-10", endDate: "2023-12-15",
     description: "New Description",
   });
 
-  // Event handlers moved from Dashboard
   const addNewCourse = () => {
-    setCourses([...courses, { ...course, id: uuidv4() }]);
+    const newCourse = {
+      ...course,
+      _id: uuidv4(),
+    };
+    setCourses([...courses, newCourse]);
   };
 
-  const deleteCourse = (courseId: any) => {
-    setCourses(courses.filter((c) => c.id !== courseId));
+  const deleteCourse = (courseId: string) => {
+    setCourses(courses.filter((c: any) => c._id !== courseId));
   };
 
   const updateCourse = () => {
     setCourses(
-      courses.map((c) => {
-        if (c.id === course.id) {
+      courses.map((c: any) => {
+        if (c._id === course._id) {
           return course;
         } else {
           return c;
@@ -43,30 +42,52 @@ export default function Kambaz() {
   };
 
   return (
-    <div id="wd-kambaz">
-      {/* Sidebar Navigation */}
-      <KambazNavigation />
-
-      {/* Main Content Area with Offset */}
-      <div className="wd-main-content-offset p-3">
+    <div id="wd-kambaz" className="d-flex vh-100">
+      <div className="wd-navigation" style={{
+        width: "60px",
+        background: "#222",
+        color: "white",
+        position: "fixed",
+        height: "100vh",
+        zIndex: 1000
+      }}>
+        <KambazNavigation />
+      </div>
+      <div className="wd-main-content-offset p-3" style={{
+        flex: "1",
+        marginLeft: "60px",
+        width: "calc(100% - 60px)"
+      }}>
         <Routes>
-          <Route path="/" element={<Navigate to="Dashboard" />} />
+          <Route path="/" element={<Navigate to="Account" />} />
           <Route path="/Account/*" element={<Account />} />
           <Route path="/Dashboard" element={
-            <Dashboard
-              courses={courses}
-              course={course}
-              setCourse={setCourse}
-              addNewCourse={addNewCourse}
-              deleteCourse={deleteCourse}
-              updateCourse={updateCourse}
-            />
+            <ProtectedRoute>
+              <Dashboard
+                courses={courses}
+                course={course}
+                setCourse={setCourse}
+                addNewCourse={addNewCourse}
+                deleteCourse={deleteCourse}
+                updateCourse={updateCourse}
+              />
+            </ProtectedRoute>
           } />
-          <Route path="/Courses" element={<Courses />} />
-          <Route path="/Courses/:cid/*" element={<Courses courses={courses} />} />
-          <Route path="/Calendar" element={<h1>Calendar</h1>} />
-          <Route path="/Inbox" element={<h1>Inbox</h1>} />
-          <Route path="/Dashboard/Home" element={<Home />} /> 
+          <Route path="/Courses/:cid/*" element={
+            <ProtectedRoute>
+              <Courses courses={courses} />
+            </ProtectedRoute>
+          } />
+          <Route path="/Calendar" element={
+            <ProtectedRoute>
+              <h1>Calendar</h1>
+            </ProtectedRoute>
+          } />
+          <Route path="/Inbox" element={
+            <ProtectedRoute>
+              <h1>Inbox</h1>
+            </ProtectedRoute>
+          } />
         </Routes>
       </div>
     </div>

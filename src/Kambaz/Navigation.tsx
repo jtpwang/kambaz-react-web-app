@@ -36,31 +36,28 @@ export default function KambazNavigation() {
     return (
         <div
             id="wd-kambaz-navigation"
-            style={{ width: 120 }}
-            className="list-group rounded-0 position-fixed bottom-0 top-0 d-none d-md-block bg-black z-2"
+            className="list-group rounded-0 position-fixed bottom-0 top-0 d-none d-md-block bg-black"
+            style={{ width: "60px" }}
         >
             {/* Northeastern Logo */}
             <a id="wd-neu-link" href="https://www.northeastern.edu/" target="_blank"
-                className="list-group-item bg-black border-0 text-center">
-                <img src="/images/northeastern.jpg" width="75px" alt="Northeastern Logo" />
+                className="list-group-item bg-black border-0 text-center p-1">
+                <img src="/images/northeastern.jpg" width="40px" alt="Northeastern Logo" />
             </a>
 
             <Link to=
-                "/Kambaz/Account" className={`list-group-item text-center border-0 bg-black
+                "/Kambaz/Account" className={`list-group-item text-center border-0 py-2 px-0
 ${pathname.includes("Account") ? "bg-white text-danger" : "bg-black text-white"}`}>
-                <FaRegCircleUser className={`fs-1 ${pathname.includes("Account") ? "text-danger" : "text-white"}`} />
-                <br />
-                Account
+                <FaRegCircleUser className={`fs-4 ${pathname.includes("Account") ? "text-danger" : "text-white"}`} />
+                <div className="small mt-1" style={{ fontSize: "0.65rem" }}>Account</div>
             </Link>
             {links.map((link) => (
-                <Link key={link.path} to={link.path} className={`list-group-item bg-black text-center border-0
+                <Link key={link.path} to={link.path} className={`list-group-item text-center border-0 py-2 px-0
 ${pathname.includes(link.label) ? "text-danger bg-white" : "text-white bg-black"}`}>
-                    {link.icon({ className: "fs-1 text-danger" })}
-                    <br />
-                    {link.label}
+                    {link.icon({ className: `fs-4 ${pathname.includes(link.label) ? "text-danger" : "text-white"}` })}
+                    <div className="small mt-1" style={{ fontSize: "0.65rem" }}>{link.label}</div>
                 </Link>
             ))}
-
 
         </div>
     );
