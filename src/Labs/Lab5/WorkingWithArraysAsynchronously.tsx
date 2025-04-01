@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
+
 import * as client from "./client";
+
 import { FormControl, ListGroup } from "react-bootstrap";
 import { FaPlusCircle, FaTrash } from "react-icons/fa";
 import { TiDelete } from "react-icons/ti";
@@ -8,6 +10,7 @@ import { FaPencil } from "react-icons/fa6";
 export default function WorkingWithArraysAsynchronously() {
     const [todos, setTodos] = useState<any[]>([]);
     const [errorMessage, setErrorMessage] = useState(null);
+
     const updateTodo = async (todo: any) => {
         try {
             await client.updateTodo(todo);
@@ -16,6 +19,7 @@ export default function WorkingWithArraysAsynchronously() {
             setErrorMessage(error.response.data.message);
         }
     };
+
     const deleteTodo = async (todo: any) => {
         try {
             await client.deleteTodo(todo);
@@ -26,6 +30,7 @@ export default function WorkingWithArraysAsynchronously() {
             setErrorMessage(error.response.data.message);
         }
     }
+
     const editTodo = (todo: any) => {
         const updatedTodos = todos.map(
             (t) => t.id === todo.id ? { ...todo, editing: true } : t);
