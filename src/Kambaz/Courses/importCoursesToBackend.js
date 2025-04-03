@@ -3,7 +3,7 @@ import { courses } from "../Database.js";
 
 // Define API endpoint
 // Try using environment variable, fallback to default if not found
-let REMOTE_SERVER = "http://localhost:4000";
+let REMOTE_SERVER = "http://kambaz-node-server-app-zi9z.onrender.com";
 try {
   // Cannot directly use import.meta.env in Node.js environment
   if (process.env.VITE_REMOTE_SERVER) {
