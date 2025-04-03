@@ -22,7 +22,7 @@ export default function Modules({ currentUser }: { currentUser?: any }) {
       const modules = await coursesClient.findModulesForCourse(cid as string);
       dispatch(setModules(modules));
     } catch (error) {
-      console.error("failed to fetch modules:", error);
+      console.error("Failed to fetch modules:", error);
     }
   }, [cid, dispatch]);
 
@@ -39,7 +39,7 @@ export default function Modules({ currentUser }: { currentUser?: any }) {
       dispatch(addModule(module));
       setModuleName("");
     } catch (error) {
-      console.error("failed to create module:", error);
+      console.error("Failed to create module:", error);
     }
   };
 
@@ -48,7 +48,7 @@ export default function Modules({ currentUser }: { currentUser?: any }) {
       await modulesClient.deleteModule(moduleId);
       dispatch(deleteModule(moduleId));
     } catch (error) {
-      console.error("failed to delete module:", error);
+      console.error("Failed to delete module:", error);
     }
   };
 
@@ -57,16 +57,16 @@ export default function Modules({ currentUser }: { currentUser?: any }) {
       await modulesClient.updateModule(module);
       dispatch(updateModule(module));
     } catch (error) {
-      console.error("failed to update module:", error);
+      console.error("Failed to update module:", error);
     }
   };
 
-  // 檢查用戶是否為教師 - 使用 prop 或 Redux 中的用戶資訊
+  // Check if the user is a faculty member - using prop or Redux user
   const effectiveUser = currentUser || reduxCurrentUser;
   const isFaculty = effectiveUser?.role === "FACULTY";
   
-  // 添加調試日誌
-  console.log("Modules 組件用戶角色檢查:", {
+  // Debug log for user role check
+  console.log("Modules component user role check:", {
     propUser: currentUser,
     reduxUser: reduxCurrentUser,
     effectiveUser,
@@ -75,7 +75,7 @@ export default function Modules({ currentUser }: { currentUser?: any }) {
 
   return (
     <div className="wd-modules-container w-100 pe-3">
-      {/* 只有教師才能看到模組控制項 */}
+      {/* Only faculty can see module controls */}
       {isFaculty && (
         <ModulesControls 
           moduleName={moduleName} 
@@ -106,7 +106,7 @@ export default function Modules({ currentUser }: { currentUser?: any }) {
               )}
               <div className="ms-auto d-flex align-items-center">
                 {isFaculty && <FaCheck className="text-success me-3" />}
-                {/* 只有教師才能看到模組控制按鈕 */}
+                {/* Only faculty can see module control buttons */}
                 {isFaculty && (
                   <ModuleControlButtons 
                     moduleId={module._id}
@@ -126,7 +126,7 @@ export default function Modules({ currentUser }: { currentUser?: any }) {
                     </div>
                     <div className="ms-auto d-flex align-items-center">
                       {isFaculty && <FaCheck className="text-success me-3" />}
-                      {/* 只有教師才能看到課程控制按鈕 */}
+                      {/* Only faculty can see lesson control buttons */}
                       {isFaculty && <LessonControlButtons />}
                     </div>
                   </div>

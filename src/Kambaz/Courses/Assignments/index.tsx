@@ -19,21 +19,19 @@ function formatDate(isoString: string): string {
 }
 
 export default function Assignments({ currentUser }: { currentUser?: any }) {
-  const { cid } = useParams(); // Get course ID from URL parameters
+  const { cid } = useParams(); // Get course ID from URL
   const navigate = useNavigate();
   const dispatch = useDispatch();
   
-  // 判斷用戶是否為教師
+  // Check if the user is a faculty member
   const isFaculty = currentUser && currentUser.role === "FACULTY";
   
-  // get assignments from store
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
   
-  // delete confirmation dialog
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [assignmentToDelete, setAssignmentToDelete] = useState<any>(null);
   
-  // 獲取課程的作業列表
+  // Fetch assignments for the course
   const fetchAssignments = useCallback(async () => {
     try {
       if (cid) {
@@ -41,16 +39,15 @@ export default function Assignments({ currentUser }: { currentUser?: any }) {
         dispatch(setAssignments(assignments));
       }
     } catch (error) {
-      console.error("failed to fetch assignments:", error);
+      console.error("Failed to fetch assignments:", error);
     }
   }, [cid, dispatch]);
 
-  // 在元件載入時獲取作業資料
+  // Load assignments when component mounts
   useEffect(() => {
     fetchAssignments();
   }, [fetchAssignments]);
   
-  // handle add new assignment
   const handleAddAssignment = () => {
     if (!isFaculty) return;
     const newAssignment = {
@@ -67,14 +64,12 @@ export default function Assignments({ currentUser }: { currentUser?: any }) {
     navigate(`/Kambaz/Courses/${cid}/Assignments/new`);
   };
   
-  // handle edit assignment
   const handleEditAssignment = (assignment: any) => {
     if (!isFaculty) return;
     dispatch(setAssignment(assignment));
     navigate(`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`);
   };
   
-  // handle delete assignment
   const handleDeleteClick = (assignment: any) => {
     if (!isFaculty) return;
     setAssignmentToDelete(assignment);
@@ -89,7 +84,7 @@ export default function Assignments({ currentUser }: { currentUser?: any }) {
         setShowDeleteModal(false);
         setAssignmentToDelete(null);
       } catch (error) {
-        console.error("failed to delete assignment:", error);
+        console.error("Failed to delete assignment:", error);
       }
     }
   };
@@ -101,7 +96,7 @@ export default function Assignments({ currentUser }: { currentUser?: any }) {
 
   return (
     <div id="wd-assignments" className="pe-5">
-      {/* delete confirmation dialog */}
+      {/* Delete Confirmation Modal */}
       <Modal show={showDeleteModal} onHide={cancelDelete}>
         <Modal.Header closeButton>
           <Modal.Title>Confirm Delete</Modal.Title>
@@ -130,7 +125,7 @@ export default function Assignments({ currentUser }: { currentUser?: any }) {
             <FormControl placeholder="Search for assignments" />
           </InputGroup>
         </div>
-        {/* Add Assignment and Group Buttons - 只對教師顯示 */}
+        {/* Add Assignment and Group Buttons - shown only to faculty */}
         {isFaculty && (
           <div>
             <Button
@@ -175,7 +170,7 @@ export default function Assignments({ currentUser }: { currentUser?: any }) {
 
         {/* Render Assignments Dynamically */}
         {assignments
-          .filter((assignment: any) => assignment.course === cid) // Filter assignments by course ID
+          .filter((assignment: any) => assignment.course === cid)
           .map((assignment: any) => (
             <ListGroup.Item
               key={assignment._id}
@@ -183,9 +178,7 @@ export default function Assignments({ currentUser }: { currentUser?: any }) {
             >
               {/* Assignment Details */}
               <div className="wd-assignment-details d-flex align-items-center">
-                {/* Drag Handle */}
                 <BsGripVertical className="me-2 fs-3" />
-                {/* Edit Icon */}
                 {isFaculty && (
                   <PiNotePencilBold 
                     className="me-2 fs-3 cursor-pointer" 

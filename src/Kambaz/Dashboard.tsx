@@ -48,13 +48,11 @@ export default function Dashboard(
             _id: "", name: "New Course", number: "New Number",
             startDate: "2023-09-10", endDate: "2023-12-15", description: "New Description",
         });
-        // 刷新課程列表
         refreshCourses();
     };
 
     const handleUpdateCourse = () => {
         updateCourse();
-        // 刷新課程列表
         refreshCourses();
     };
 
@@ -67,15 +65,13 @@ export default function Dashboard(
         if (currentUser) {
             try {
                 const enrollment = await enrollmentsClient.enrollUserInCourse(currentUser._id, courseId);
-                console.log("Enrollment response:", enrollment);  // 檢查返回的註冊資料結構
+                console.log("Enrollment response:", enrollment);  
                 dispatch(enrollCourse(enrollment));
                 
-                // 強制重新渲染組件 - 重新獲取用戶的課程註冊資料
                 const updatedEnrollments = await enrollmentsClient.findEnrollmentsForUser(currentUser._id);
-                console.log("Updated enrollments:", updatedEnrollments);  // 檢查註冊資料
+                console.log("Updated enrollments:", updatedEnrollments);  
                 dispatch(setEnrollments(updatedEnrollments));
                 
-                // 調用主應用的刷新課程函數
                 refreshCourses();
             } catch (error) {
                 console.error("Error enrolling in course:", error);
@@ -90,11 +86,9 @@ export default function Dashboard(
                 await enrollmentsClient.unenrollUserFromCourse(currentUser._id, courseId);
                 dispatch(unenrollCourse({ userId: currentUser._id, courseId }));
                 
-                // 強制重新渲染組件 - 重新獲取用戶的課程註冊資料
                 const updatedEnrollments = await enrollmentsClient.findEnrollmentsForUser(currentUser._id);
                 dispatch(setEnrollments(updatedEnrollments));
                 
-                // 調用主應用的刷新課程函數
                 refreshCourses();
             } catch (error) {
                 console.error("Error unenrolling from course:", error);
@@ -109,13 +103,11 @@ export default function Dashboard(
 
     // check if user is enrolled
     const isEnrolled = (courseId: string) => {
-        // 確保 enrollments 是一個數組並且有內容
         if (!enrollments || !Array.isArray(enrollments) || enrollments.length === 0) {
             return false;
         }
         
         return enrollments.some((enrollment: any) => {
-            // 檢查 enrollment 結構，兼容不同的 API 返回格式
             const enrolledCourseId = enrollment.course?._id || 
                                     (typeof enrollment.course === 'string' ? enrollment.course : null);
             const enrolledUserId = enrollment.user?._id || 
@@ -131,7 +123,7 @@ export default function Dashboard(
         console.log("Current user:", currentUser);
         console.log("Is enrolled:", isEnrolled(courseId));
         
-        // 將 navigate 的路徑明確設置為 Home 子路由
+
         try {
             const url = `/Kambaz/Courses/${courseId}/Home`;
             console.log("Navigating to URL:", url);
@@ -146,10 +138,9 @@ export default function Dashboard(
     // show enrollment button condition: only when user is STUDENT
     const showEnrollmentControls = currentUser && currentUser.role === "STUDENT";
 
-    // 根據顯示狀態過濾課程
-    // 教師應該始終看到所有課程，學生則根據 showAllCourses 狀態來顯示
+
     const displayedCourses = showEditControls 
-        ? allCourses  // 教師角色，顯示所有課程
+        ? allCourses  
         : (showEnrollmentControls && !showAllCourses
             ? courses.filter(course => 
                 enrollments.some((enrollment: any) => {
@@ -157,7 +148,7 @@ export default function Dashboard(
                                           (typeof enrollment.course === 'string' ? enrollment.course : null);
                     return enrolledCourseId === course._id;
                 }))
-            : allCourses);  // 其他情況，顯示所有課程
+            : allCourses);  
 
     console.log("課程顯示狀態:", {
         showEnrollmentControls,

@@ -23,13 +23,13 @@ export default function ModuleEditor({ dialogTitle, moduleName, setModuleName, a
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleClose}>
-          取消
+          Cancel
         </Button>
         <Button variant="danger" onClick={() => {
           addModule();
           handleClose();
         }}>
-          添加模組
+          Add Module
         </Button>
       </Modal.Footer>
     </Modal>

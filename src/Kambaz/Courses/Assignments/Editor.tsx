@@ -20,7 +20,7 @@ export default function AssignmentEditor({ currentUser }: { currentUser?: any })
     const navigate = useNavigate();
     const dispatch = useDispatch();
     
-    // 檢查用戶是否為教師，如果不是，重定向回作業列表頁面
+    // check faculty
     const isFaculty = currentUser && currentUser.role === "FACULTY";
     useEffect(() => {
         if (!isFaculty) {

@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// 定義註冊類型
 interface Enrollment {
   _id?: string;
   user: string;

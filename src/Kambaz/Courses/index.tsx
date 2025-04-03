@@ -10,12 +10,12 @@ import People from "./People";
 export default function Courses({ courses, currentUser }: { courses: any[], currentUser?: any }) {
     const { cid } = useParams();
     
-    // 如果沒有指定課程 ID，顯示課程列表
+    // If no course ID is specified, show the course list
     if (!cid) {
         return (
             <div id="wd-courses" className="container-fluid px-0">
                 <div className="course-header mb-3">
-                    <h2>課程列表</h2>
+                    <h2>Course List</h2>
                     <hr />
                 </div>
                 <div className="row">
@@ -26,7 +26,7 @@ export default function Courses({ courses, currentUser }: { courses: any[], curr
                                     <h5 className="card-title">{course.name}</h5>
                                     <p className="card-text">{course.description}</p>
                                     <Link to={`/Kambaz/Courses/${course._id}`} className="btn btn-primary">
-                                        查看課程
+                                        View Course
                                     </Link>
                                 </div>
                             </div>
@@ -37,21 +37,21 @@ export default function Courses({ courses, currentUser }: { courses: any[], curr
         );
     }
     
-    // 找到當前選擇的課程
+    // Find the currently selected course
     const course = courses.find((course) => course._id === cid);
     
     return (
         <div id="wd-courses" className="container-fluid px-0">
             <div className="course-header mb-3">
-                <h2>{course ? course.name : "課程詳情"}</h2>
+                <h2>{course ? course.name : "Course Details"}</h2>
                 <hr />
             </div>
             <div className="d-flex">
-                {/* 左側邊欄：課程導航 */}
+                {/* Sidebar: Course Navigation */}
                 <div className="course-nav" style={{ width: "150px", minWidth: "150px" }}>
                     <CourseNavigation />
                 </div>
-                {/* 主要內容 */}
+                {/* Main Content */}
                 <div className="course-content flex-grow-1">
                     <Routes>
                         <Route path="/" element={<Navigate to="Home" />} />

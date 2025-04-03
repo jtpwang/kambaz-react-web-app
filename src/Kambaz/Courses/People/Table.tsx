@@ -55,18 +55,18 @@ export default function PeopleTable({ currentUser }: { currentUser?: any }) {
         setError(null);
         
         try {
-            console.log(`開始獲取課程 ${cid} 的用戶...`);
+            console.log(`Fetching users for course ${cid}...`);
             const loadedUsers = await client.findUsersEnrolledInCourse(cid);
-            console.log(`獲取到課程 ${cid} 的用戶:`, loadedUsers);
-            
+            console.log(`Users fetched for course ${cid}:`, loadedUsers);
+    
             if (!loadedUsers || !Array.isArray(loadedUsers) || loadedUsers.length === 0) {
-                console.warn(`課程 ${cid} 沒有找到已註冊用戶`);
+                console.warn(`No enrolled users found for course ${cid}`);
             }
-            
+    
             setUsers(loadedUsers || []);
         } catch (err) {
-            console.error("獲取用戶失敗:", err);
-            setError("獲取用戶失敗，請稍後再試。");
+            console.error("Failed to fetch users:", err);
+            setError("Failed to fetch users. Please try again later.");
         } finally {
             setLoading(false);
         }
@@ -141,9 +141,9 @@ export default function PeopleTable({ currentUser }: { currentUser?: any }) {
         setShowDeleteModal(true);
     };
     
-    // 添加调试日志
+    // Add debug log
     useEffect(() => {
-        console.log("PeopleTable 组件信息:", {
+        console.log("PeopleTable component info:", {
             courseId: cid,
             currentUser: effectiveUser,
             isFaculty

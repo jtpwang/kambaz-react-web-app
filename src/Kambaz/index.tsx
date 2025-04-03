@@ -1,5 +1,4 @@
-import { Routes, Route, Navigate }
-  from "react-router";
+import { Routes, Route, Navigate } from "react-router";
 import Account from "./Account";
 import Dashboard from "./Dashboard";
 import KambazNavigation from "./Navigation";
@@ -19,39 +18,39 @@ export default function Kambaz() {
     startDate: "2023-09-10", endDate: "2023-12-15",
     description: "New Description",
   });
-  
+
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   const fetchAllCourses = useCallback(async () => {
     try {
-      console.log("開始獲取所有課程...");
-      // 使用原先的 userClient.findAllCourses()
+      console.log("Starting to fetch all courses...");
+      // Using userClient.findAllCourses()
       const allCoursesData = await userClient.findAllCourses();
-      console.log("獲取到所有課程:", allCoursesData);
-      
+      console.log("Fetched all courses:", allCoursesData);
+
       if (Array.isArray(allCoursesData) && allCoursesData.length > 0) {
-        console.log(`成功設置 ${allCoursesData.length} 門課程到 allCourses 狀態`);
+        console.log(`Successfully set ${allCoursesData.length} courses to allCourses state`);
         setAllCourses(allCoursesData);
       } else {
-        console.error("API 返回課程資料格式不正確:", allCoursesData);
+        console.error("API returned an invalid course format:", allCoursesData);
       }
     } catch (error) {
-      console.error("獲取所有課程失敗:", error);
+      console.error("Failed to fetch all courses:", error);
     }
   }, []);
 
   const fetchCourses = useCallback(async () => {
     try {
-      console.log("開始獲取用戶課程...");
+      console.log("Starting to fetch user courses...");
       const courses = await userClient.findMyCourses();
-      console.log("獲取到用戶課程:", courses);
+      console.log("Fetched user courses:", courses);
       setCourses(courses);
-      
-      // 在獲取到用戶課程後也刷新所有課程
+
+      // After fetching user courses, also refresh all courses
       fetchAllCourses();
     } catch (error) {
-      console.error("獲取用戶課程失敗:", error);
-      // 即使獲取用戶課程失敗，也嘗試獲取所有課程
+      console.error("Failed to fetch user courses:", error);
+      // Even if fetching user courses fails, attempt to fetch all courses
       fetchAllCourses();
     }
   }, [fetchAllCourses]);
