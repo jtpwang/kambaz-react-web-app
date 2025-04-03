@@ -1,8 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { enrollments as dbEnrollments } from "../Database";
+
+// 定義註冊類型
+interface Enrollment {
+  _id?: string;
+  user: string;
+  course: {
+    _id: string;
+    name?: string;
+    description?: string;
+    [key: string]: any;
+  };
+}
 
 const initialState = {
-  enrollments: dbEnrollments,
+  enrollments: [] as Enrollment[],
   showAllCourses: false,
 };
 
@@ -13,29 +24,28 @@ const enrollmentsSlice = createSlice({
     toggleShowAllCourses: (state) => {
       state.showAllCourses = !state.showAllCourses;
     },
-    enrollCourse: (state, { payload: { userId, courseId } }) => {
+    setEnrollments: (state, { payload: enrollments }) => {
+      state.enrollments = enrollments;
+    },
+    enrollCourse: (state, { payload }) => {
       // check if already enrolled
       const isEnrolled = state.enrollments.some(
-        (e) => e.user === userId && e.course === courseId
+        (e) => e.user === payload.user && e.course._id === payload.course._id
       );
       
       // if not enrolled, add new enrollment
       if (!isEnrolled) {
-        state.enrollments.push({
-          user: userId,
-          course: courseId,
-        });
+        state.enrollments.push(payload);
       }
     },
     unenrollCourse: (state, { payload: { userId, courseId } }) => {
       // filter out the course to be unenrolled
       state.enrollments = state.enrollments.filter(
-        (e) => !(e.user === userId && e.course === courseId)
+        (e) => !(e.user === userId && e.course._id === courseId)
       );
     },
   },
 });
 
-export const { toggleShowAllCourses, enrollCourse, unenrollCourse } = enrollmentsSlice.actions;
+export const { toggleShowAllCourses, setEnrollments, enrollCourse, unenrollCourse } = enrollmentsSlice.actions;
 export default enrollmentsSlice.reducer;
-

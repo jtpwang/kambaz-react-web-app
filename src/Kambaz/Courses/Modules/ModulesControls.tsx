@@ -2,10 +2,20 @@ import { FaPlus } from "react-icons/fa6";
 import GreenCheckmark from "./GreenCheckmark";
 import { Button, Dropdown } from "react-bootstrap";
 import ModuleEditor from "./ModuleEditor";
+import { useState } from "react";
 
 export default function ModulesControls(
     { moduleName, setModuleName, addModule }:
         { moduleName: string; setModuleName: (title: string) => void; addModule: () => void; }) {
+    // 使用 useState 管理模態框的顯示狀態
+    const [showModal, setShowModal] = useState(false);
+    
+    // 處理模組添加
+    const handleAddModule = () => {
+        addModule();
+        setShowModal(false);
+    };
+    
     return (
         <div id="wd-modules-controls" className="d-flex justify-content-end mb-3">
             <Button variant="secondary" size="sm" className="me-2" id="wd-collapse-all">
@@ -40,13 +50,22 @@ export default function ModulesControls(
                     </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
-            <button className="btn btn-danger btn-sm" id="wd-add-module-btn"
-                data-bs-toggle="modal" data-bs-target="#wd-add-module-dialog">
+            <button 
+                className="btn btn-danger btn-sm" 
+                id="wd-add-module-btn"
+                onClick={() => setShowModal(true)}
+            >
                 <FaPlus className="position-relative me-1" style={{ bottom: "1px" }} />
                 Module
             </button>
-            <ModuleEditor dialogTitle="Add Module" moduleName={moduleName}
-                setModuleName={setModuleName} addModule={addModule} />
+            <ModuleEditor 
+                dialogTitle="Add Module" 
+                moduleName={moduleName}
+                setModuleName={setModuleName} 
+                addModule={handleAddModule}
+                show={showModal}
+                handleClose={() => setShowModal(false)}
+            />
         </div>
     );
 }

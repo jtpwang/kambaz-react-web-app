@@ -1,117 +1,3 @@
-// import { Button, FormControl, InputGroup, ListGroup } from "react-bootstrap";
-// import { FaMagnifyingGlass } from "react-icons/fa6";
-// import { BsGripVertical, BsPlus } from "react-icons/bs";
-// import { MdArrowDropDown } from "react-icons/md";
-// import { IoEllipsisVertical } from "react-icons/io5";
-// import { PiNotePencilBold } from "react-icons/pi";
-// import { FaCheckCircle } from "react-icons/fa";
-
-// import { assignments } from "../../Database";
-// import { useParams } from "react-router-dom";
-
-// function formatDate(isoString: string): string {
-//   const [year, month, day] = isoString.split("-").map(Number);
-//   const date = new Date(year, month - 1, day);
-//   return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
-// }
-
-// export default function Assignments() {
-//   const { cid } = useParams(); // Get course ID from URL parameters
-
-//   return (
-//     <div id="wd-assignments" className="pe-5">
-//       {/* Search and Action Buttons */}
-//       <div className="mb-3 d-flex justify-content-between">
-//         {/* Search Input */}
-//         <div className="d-flex w-50">
-//           <InputGroup id="wd-search-assignment">
-//             <InputGroup.Text>
-//               <FaMagnifyingGlass />
-//             </InputGroup.Text>
-//             <FormControl placeholder="Search for assignments" />
-//           </InputGroup>
-//         </div>
-//         {/* Add Assignment and Group Buttons */}
-//         <div>
-//           <Button
-//             variant="secondary"
-//             className="me-1"
-//             id="wd-add-assignment-group"
-//           >
-//             <BsPlus className="fs-5" />
-//             Group
-//           </Button>
-//           <Button variant="danger" id="wd-add-assignment">
-//             <BsPlus className="fs-5" />
-//             Assignment
-//           </Button>
-//         </div>
-//       </div>
-
-//       {/* Assignments List */}
-//       <ListGroup className="rounded-0 fs-5">
-//         {/* Assignments Header */}
-//         <ListGroup.Item id="wd-assignments-title" className="p-0 border-gray">
-//           <div className="d-flex align-items-center justify-content-between wd-title p-3 ps-2 bg-secondary">
-//             <span>
-//               <BsGripVertical className="fs-3" />
-//               <MdArrowDropDown className="me-2" />
-//               ASSIGNMENTS
-//             </span>
-//             <div className="d-flex align-items-center">
-//               <div className="border rounded-4 ps-2 pe-2 border-dark border-1 border-opacity-50">
-//                 <span className="fs-6">40% of total</span>
-//               </div>
-//               <BsPlus className="fs-3" />
-//               <IoEllipsisVertical className="fs-4" />
-//             </div>
-//           </div>
-//         </ListGroup.Item>
-
-//         {/* Render Assignments Dynamically */}
-//         {assignments
-//           .filter((assignment) => assignment.course === cid) // Filter assignments by course ID
-//           .map((assignment) => (
-//             <ListGroup.Item
-//               key={assignment._id}
-//               className="p-3 ps-1 wd-assignment d-flex justify-content-between align-items-center"
-//             >
-//               {/* Assignment Details */}
-//               <div className="wd-assignment-details d-flex align-items-center">
-//                 {/* Drag Handle */}
-//                 <BsGripVertical className="me-2 fs-3" />
-//                 {/* Edit Icon */}
-//                 <PiNotePencilBold className="me-2 fs-3" />
-//                 <div>
-//                   <div>
-//                     <a
-//                       href={`#/Kambaz/Courses/${cid}/Assignments/${assignment._id}`}
-//                       className="wd-assignment-link text-black text-decoration-none"
-//                     >
-//                       {assignment.title}
-//                     </a>
-//                   </div>
-//                   <div className="fs-6">
-//                     <span className="text-danger">Multiple Modules</span> |{" "}
-//                     <strong>Not available until</strong>{" "}
-//                     {formatDate(assignment.availableFrom)} at 12:00am |
-//                     <br />
-//                     <strong>Due</strong> {formatDate(assignment.due)} at 11:59pm
-//                     | 100 pts
-//                   </div>
-//                 </div>
-//               </div>
-//               {/* Completion Indicator */}
-//               <FaCheckCircle className="text-success fs-4" />
-//             </ListGroup.Item>
-//           ))}
-//       </ListGroup>
-//     </div>
-//   );
-// }
-
-
-
 import { Button, FormControl, InputGroup, ListGroup, Modal } from "react-bootstrap";
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { BsGripVertical, BsPlus } from "react-icons/bs";
@@ -121,8 +7,9 @@ import { PiNotePencilBold } from "react-icons/pi";
 import { FaCheckCircle, FaTrash } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
-import { deleteAssignment, setAssignment } from "./reducer";
+import { useState, useEffect, useCallback } from "react";
+import { deleteAssignment, setAssignment, setAssignments } from "./reducer";
+import * as assignmentsClient from "./client";
 
 function formatDate(isoString: string): string {
   if (!isoString) return "";
@@ -131,10 +18,13 @@ function formatDate(isoString: string): string {
   return date.toLocaleDateString("en-US", { month: "long", day: "numeric" });
 }
 
-export default function Assignments() {
+export default function Assignments({ currentUser }: { currentUser?: any }) {
   const { cid } = useParams(); // Get course ID from URL parameters
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  
+  // 判斷用戶是否為教師
+  const isFaculty = currentUser && currentUser.role === "FACULTY";
   
   // get assignments from store
   const { assignments } = useSelector((state: any) => state.assignmentsReducer);
@@ -143,9 +33,27 @@ export default function Assignments() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [assignmentToDelete, setAssignmentToDelete] = useState<any>(null);
   
+  // 獲取課程的作業列表
+  const fetchAssignments = useCallback(async () => {
+    try {
+      if (cid) {
+        const assignments = await assignmentsClient.findAssignmentsForCourse(cid);
+        dispatch(setAssignments(assignments));
+      }
+    } catch (error) {
+      console.error("failed to fetch assignments:", error);
+    }
+  }, [cid, dispatch]);
+
+  // 在元件載入時獲取作業資料
+  useEffect(() => {
+    fetchAssignments();
+  }, [fetchAssignments]);
+  
   // handle add new assignment
   const handleAddAssignment = () => {
-    dispatch(setAssignment({
+    if (!isFaculty) return;
+    const newAssignment = {
       title: "",
       description: "",
       points: 100,
@@ -153,27 +61,36 @@ export default function Assignments() {
       dueDate: new Date().toISOString().split('T')[0],
       availableFrom: new Date().toISOString().split('T')[0],
       availableUntil: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0]
-    }));
+    };
+    
+    dispatch(setAssignment(newAssignment));
     navigate(`/Kambaz/Courses/${cid}/Assignments/new`);
   };
   
   // handle edit assignment
   const handleEditAssignment = (assignment: any) => {
+    if (!isFaculty) return;
     dispatch(setAssignment(assignment));
     navigate(`/Kambaz/Courses/${cid}/Assignments/${assignment._id}`);
   };
   
   // handle delete assignment
   const handleDeleteClick = (assignment: any) => {
+    if (!isFaculty) return;
     setAssignmentToDelete(assignment);
     setShowDeleteModal(true);
   };
   
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (assignmentToDelete) {
-      dispatch(deleteAssignment(assignmentToDelete._id));
-      setShowDeleteModal(false);
-      setAssignmentToDelete(null);
+      try {
+        await assignmentsClient.deleteAssignment(assignmentToDelete._id);
+        dispatch(deleteAssignment(assignmentToDelete._id));
+        setShowDeleteModal(false);
+        setAssignmentToDelete(null);
+      } catch (error) {
+        console.error("failed to delete assignment:", error);
+      }
     }
   };
   
@@ -213,25 +130,27 @@ export default function Assignments() {
             <FormControl placeholder="Search for assignments" />
           </InputGroup>
         </div>
-        {/* Add Assignment and Group Buttons */}
-        <div>
-          <Button
-            variant="secondary"
-            className="me-1"
-            id="wd-add-assignment-group"
-          >
-            <BsPlus className="fs-5" />
-            Group
-          </Button>
-          <Button 
-            variant="danger" 
-            id="wd-add-assignment"
-            onClick={handleAddAssignment}
-          >
-            <BsPlus className="fs-5" />
-            Assignment
-          </Button>
-        </div>
+        {/* Add Assignment and Group Buttons - 只對教師顯示 */}
+        {isFaculty && (
+          <div>
+            <Button
+              variant="secondary"
+              className="me-1"
+              id="wd-add-assignment-group"
+            >
+              <BsPlus className="fs-5" />
+              Group
+            </Button>
+            <Button 
+              variant="danger" 
+              id="wd-add-assignment"
+              onClick={handleAddAssignment}
+            >
+              <BsPlus className="fs-5" />
+              Assignment
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Assignments List */}
@@ -267,10 +186,12 @@ export default function Assignments() {
                 {/* Drag Handle */}
                 <BsGripVertical className="me-2 fs-3" />
                 {/* Edit Icon */}
-                <PiNotePencilBold 
-                  className="me-2 fs-3 cursor-pointer" 
-                  onClick={() => handleEditAssignment(assignment)}
-                />
+                {isFaculty && (
+                  <PiNotePencilBold 
+                    className="me-2 fs-3 cursor-pointer" 
+                    onClick={() => handleEditAssignment(assignment)}
+                  />
+                )}
                 <div>
                   <div>
                     <a
@@ -297,10 +218,12 @@ export default function Assignments() {
               {/* Actions */}
               <div className="d-flex align-items-center">
                 <FaCheckCircle className="text-success fs-4 me-3" />
-                <FaTrash 
-                  className="text-danger fs-4 cursor-pointer" 
-                  onClick={() => handleDeleteClick(assignment)}
-                />
+                {isFaculty && (
+                  <FaTrash 
+                    className="text-danger fs-4 cursor-pointer" 
+                    onClick={() => handleDeleteClick(assignment)}
+                  />
+                )}
               </div>
             </ListGroup.Item>
           ))}

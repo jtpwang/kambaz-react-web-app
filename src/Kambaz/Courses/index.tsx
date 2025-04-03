@@ -1,80 +1,65 @@
-// import { Route, Routes, useLocation } from "react-router";
-// import CourseNavigation from "./Navigation.tsx";
-// import { Navigate, useParams } from "react-router-dom";
-// import Modules from "./Modules";
-// import Home from "./Home";
-// import Assignments from "./Assignments";
-// import AssignmentEditor from "./Assignments/Editor.tsx";
-// import { FaAlignJustify } from "react-icons/fa";
-// import PeopleTable from "./People/Table.tsx";
-
-// export default function Courses({ courses }: { courses: any[]; }) {
-//     const { cid } = useParams();
-//     const { pathname } = useLocation();
-//     const course = courses.find((course) => course._id === cid);
-//     return (
-//         <div id="wd-courses">
-//             <div className="mt-3 d-none d-md-block">
-//                 <h2 className="text-danger">
-//                     <FaAlignJustify className=" fs-4 me-4" />
-//                     {course && course.name} &gt; {pathname.split("/")[4]}
-//                     <hr />
-//                 </h2>
-//             </div>
-//             <div className="d-md-none sticky-top">
-
-//             </div>
-//             <div className="d-flex">
-//                 <div className="d-none d-md-block">
-//                     <CourseNavigation />
-//                 </div>
-//                 <div className="flex-fill">
-//                     <Routes>
-//                         <Route path="/" element={<Navigate to="Home" />} />
-//                         <Route path="Home" element={<Home />} />
-//                         <Route path="Modules" element={<Modules />} />
-//                         <Route path="Assignments" element={<Assignments />} />
-//                         <Route path="Assignments/:aid" element={<AssignmentEditor />} />
-//                         <Route path="Quizzes" element={<h2>Quizzes</h2>} />
-//                         <Route path="Grades" element={<h2>Grades</h2>} />
-//                         <Route path="People" element={<PeopleTable />} />
-//                     </Routes>
-//                 </div>
-//             </div>
-//         </div>
-//     );
-// }
-
-
+import { Route, Routes } from "react-router";
 import CourseNavigation from "./Navigation";
-import Home from "./Home";
+import { Link, Navigate, useParams } from "react-router-dom";
 import Modules from "./Modules";
+import Home from "./Home";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
-import { Route, Routes, useParams } from "react-router-dom";
+import People from "./People";
 
-export default function Courses({ courses }: { courses: any[] }) {
+export default function Courses({ courses, currentUser }: { courses: any[], currentUser?: any }) {
     const { cid } = useParams();
+    
+    // 如果沒有指定課程 ID，顯示課程列表
+    if (!cid) {
+        return (
+            <div id="wd-courses" className="container-fluid px-0">
+                <div className="course-header mb-3">
+                    <h2>課程列表</h2>
+                    <hr />
+                </div>
+                <div className="row">
+                    {courses.map((course) => (
+                        <div className="col-md-4 mb-3" key={course._id}>
+                            <div className="card">
+                                <div className="card-body">
+                                    <h5 className="card-title">{course.name}</h5>
+                                    <p className="card-text">{course.description}</p>
+                                    <Link to={`/Kambaz/Courses/${course._id}`} className="btn btn-primary">
+                                        查看課程
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
+    
+    // 找到當前選擇的課程
     const course = courses.find((course) => course._id === cid);
     
     return (
         <div id="wd-courses" className="container-fluid px-0">
             <div className="course-header mb-3">
-                <h2>{course ? course.name : "Course Details"}</h2>
+                <h2>{course ? course.name : "課程詳情"}</h2>
                 <hr />
             </div>
             <div className="d-flex">
-                {/* Left Sidebar: Course Navigation */}
+                {/* 左側邊欄：課程導航 */}
                 <div className="course-nav" style={{ width: "150px", minWidth: "150px" }}>
                     <CourseNavigation />
                 </div>
-                {/* Main Content */}
+                {/* 主要內容 */}
                 <div className="course-content flex-grow-1">
                     <Routes>
+                        <Route path="/" element={<Navigate to="Home" />} />
                         <Route path="Home" element={<Home />} />
-                        <Route path="Modules" element={<Modules />} />
-                        <Route path="Assignments" element={<Assignments />} />
-                        <Route path="Assignments/:aid" element={<AssignmentEditor />} />
+                        <Route path="Modules" element={<Modules currentUser={currentUser} />} />
+                        <Route path="Assignments" element={<Assignments currentUser={currentUser} />} />
+                        <Route path="Assignments/:aid" element={<AssignmentEditor currentUser={currentUser} />} />
+                        <Route path="People" element={<People currentUser={currentUser} />} />
                     </Routes>
                 </div>
             </div>

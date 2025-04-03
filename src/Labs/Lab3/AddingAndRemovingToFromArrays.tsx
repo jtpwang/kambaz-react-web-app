@@ -1,7 +1,7 @@
 export default function AddingAndRemovingToFromArrays() {
-    let numberArray1 = [1, 2, 3, 4, 5];
-    let stringArray1 = ["string1", "string2"];
-    let todoArray = [<li>Buy milk</li>, <li>Feed the pets</li>];
+    const numberArray1 = [1, 2, 3, 4, 5];
+    const stringArray1 = ["string1", "string2"];
+    const todoArray = [<li>Buy milk</li>, <li>Feed the pets</li>];
     numberArray1.push(6); // adding new items
     stringArray1.push("string3");
     todoArray.push(<li>Walk the dogs</li>);

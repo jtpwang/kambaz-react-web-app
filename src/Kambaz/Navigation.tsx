@@ -14,7 +14,7 @@ export default function KambazNavigation() {
         },
         {
             label: "Courses"
-            , path: "/Kambaz/Dashboard"
+            , path: "/Kambaz/Courses"
             , icon: LiaBookSolid
         },
         {

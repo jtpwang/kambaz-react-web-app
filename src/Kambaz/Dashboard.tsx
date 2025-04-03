@@ -1,19 +1,37 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleShowAllCourses, enrollCourse, unenrollCourse } from "./Dashboard/reducer";
+import { toggleShowAllCourses, enrollCourse, unenrollCourse, setEnrollments } from "./Dashboard/reducer";
 import { Button } from "react-bootstrap";
+import { useEffect } from "react";
+import * as enrollmentsClient from "./Dashboard/client";
 
 export default function Dashboard(
-    { courses, course, setCourse, addNewCourse,
-        deleteCourse, updateCourse }: {
-            courses: any[]; course: any; setCourse: (course: any) => void;
+    { courses, allCourses, course, setCourse, addNewCourse,
+        deleteCourse, updateCourse, refreshCourses }: {
+            courses: any[]; allCourses: any[]; course: any; setCourse: (course: any) => void;
             addNewCourse: () => void; deleteCourse: (courseId: any) => void;
-            updateCourse: () => void;
+            updateCourse: () => void; refreshCourses: () => void;
         }) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { currentUser } = useSelector((state: any) => state.accountReducer);
     const { enrollments, showAllCourses } = useSelector((state: any) => state.enrollmentsReducer);
+
+    // Load user enrollments when component mounts or user changes
+    useEffect(() => {
+        const fetchEnrollments = async () => {
+            if (currentUser) {
+                try {
+                    const userEnrollments = await enrollmentsClient.findEnrollmentsForUser(currentUser._id);
+                    dispatch(setEnrollments(userEnrollments));
+                } catch (error) {
+                    console.error("Error fetching enrollments:", error);
+                }
+            }
+        };
+        
+        fetchEnrollments();
+    }, [currentUser, dispatch]);
 
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setCourse({ ...course, name: e.target.value });
@@ -30,6 +48,14 @@ export default function Dashboard(
             _id: "", name: "New Course", number: "New Number",
             startDate: "2023-09-10", endDate: "2023-12-15", description: "New Description",
         });
+        // 刷新課程列表
+        refreshCourses();
+    };
+
+    const handleUpdateCourse = () => {
+        updateCourse();
+        // 刷新課程列表
+        refreshCourses();
     };
 
     const handleEditCourse = (courseToEdit: any) => {
@@ -37,16 +63,42 @@ export default function Dashboard(
     };
 
     // handle enrollment
-    const handleEnroll = (courseId: string) => {
+    const handleEnroll = async (courseId: string) => {
         if (currentUser) {
-            dispatch(enrollCourse({ userId: currentUser._id, courseId }));
+            try {
+                const enrollment = await enrollmentsClient.enrollUserInCourse(currentUser._id, courseId);
+                console.log("Enrollment response:", enrollment);  // 檢查返回的註冊資料結構
+                dispatch(enrollCourse(enrollment));
+                
+                // 強制重新渲染組件 - 重新獲取用戶的課程註冊資料
+                const updatedEnrollments = await enrollmentsClient.findEnrollmentsForUser(currentUser._id);
+                console.log("Updated enrollments:", updatedEnrollments);  // 檢查註冊資料
+                dispatch(setEnrollments(updatedEnrollments));
+                
+                // 調用主應用的刷新課程函數
+                refreshCourses();
+            } catch (error) {
+                console.error("Error enrolling in course:", error);
+            }
         }
     };
 
     // handle unenrollment
-    const handleUnenroll = (courseId: string) => {
+    const handleUnenroll = async (courseId: string) => {
         if (currentUser) {
-            dispatch(unenrollCourse({ userId: currentUser._id, courseId }));
+            try {
+                await enrollmentsClient.unenrollUserFromCourse(currentUser._id, courseId);
+                dispatch(unenrollCourse({ userId: currentUser._id, courseId }));
+                
+                // 強制重新渲染組件 - 重新獲取用戶的課程註冊資料
+                const updatedEnrollments = await enrollmentsClient.findEnrollmentsForUser(currentUser._id);
+                dispatch(setEnrollments(updatedEnrollments));
+                
+                // 調用主應用的刷新課程函數
+                refreshCourses();
+            } catch (error) {
+                console.error("Error unenrolling from course:", error);
+            }
         }
     };
 
@@ -57,19 +109,35 @@ export default function Dashboard(
 
     // check if user is enrolled
     const isEnrolled = (courseId: string) => {
-        return enrollments.some(
-            (enrollment: any) =>
-                enrollment.user === currentUser?._id &&
-                enrollment.course === courseId
-        );
+        // 確保 enrollments 是一個數組並且有內容
+        if (!enrollments || !Array.isArray(enrollments) || enrollments.length === 0) {
+            return false;
+        }
+        
+        return enrollments.some((enrollment: any) => {
+            // 檢查 enrollment 結構，兼容不同的 API 返回格式
+            const enrolledCourseId = enrollment.course?._id || 
+                                    (typeof enrollment.course === 'string' ? enrollment.course : null);
+            const enrolledUserId = enrollment.user?._id || 
+                                  (typeof enrollment.user === 'string' ? enrollment.user : null);
+            
+            return enrolledUserId === currentUser?._id && enrolledCourseId === courseId;
+        });
     };
 
     // handle course navigation
     const handleCourseNavigation = (courseId: string) => {
-        if (currentUser?.role === "FACULTY" || isEnrolled(courseId)) {
-            navigate(`/Kambaz/Courses/${courseId}`);
-        } else {
-            alert("You need to enroll in this course before accessing it");
+        console.log("Navigate to course:", courseId);
+        console.log("Current user:", currentUser);
+        console.log("Is enrolled:", isEnrolled(courseId));
+        
+        // 將 navigate 的路徑明確設置為 Home 子路由
+        try {
+            const url = `/Kambaz/Courses/${courseId}/Home`;
+            console.log("Navigating to URL:", url);
+            navigate(url);
+        } catch (error) {
+            console.error("Navigation error:", error);
         }
     };
 
@@ -78,10 +146,30 @@ export default function Dashboard(
     // show enrollment button condition: only when user is STUDENT
     const showEnrollmentControls = currentUser && currentUser.role === "STUDENT";
 
-    // determine which courses to display
-    const displayedCourses = showAllCourses || !showEnrollmentControls
-        ? courses // show all courses
-        : courses.filter((c) => isEnrolled(c._id)); // show only enrolled courses
+    // 根據顯示狀態過濾課程
+    // 教師應該始終看到所有課程，學生則根據 showAllCourses 狀態來顯示
+    const displayedCourses = showEditControls 
+        ? allCourses  // 教師角色，顯示所有課程
+        : (showEnrollmentControls && !showAllCourses
+            ? courses.filter(course => 
+                enrollments.some((enrollment: any) => {
+                    const enrolledCourseId = enrollment.course?._id || 
+                                          (typeof enrollment.course === 'string' ? enrollment.course : null);
+                    return enrolledCourseId === course._id;
+                }))
+            : allCourses);  // 其他情況，顯示所有課程
+
+    console.log("課程顯示狀態:", {
+        showEnrollmentControls,
+        showEditControls,
+        showAllCourses,
+        courses: courses.length,
+        courses_data: courses,
+        allCourses: allCourses.length,
+        allCourses_data: allCourses,
+        enrollments: enrollments.length,
+        displayedCourses: displayedCourses.length
+    });
 
     return (
         <div id="wd-dashboard">
@@ -106,7 +194,7 @@ export default function Dashboard(
                         <div className="ms-auto">
                             <button
                                 className="btn btn-warning me-2"
-                                onClick={updateCourse}
+                                onClick={handleUpdateCourse}
                                 style={{ backgroundColor: "#ffc107", color: "#000" }}
                             >
                                 Update
