@@ -30,7 +30,7 @@ export default function TOC() {
         className="nav-link">My GitHub- server</a></li>
 
       <li className="nav-item">
-        <a id="wd-server-link" href="https://kambaz-node-server-app-yh6s.onrender.com" target="_blank" className="nav-link">
+        <a id="wd-server-link" href="https://kambaz-node-server-app-zi9z.onrender.com" target="_blank" className="nav-link">
           Server (Render)
         </a>
       </li>
