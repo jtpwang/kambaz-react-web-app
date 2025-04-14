@@ -4,7 +4,7 @@ import { User } from "../../contexts/UserContext";
 const axiosWithCredentials = axios.create({ withCredentials: true });
 
 // Vite uses import.meta.env instead of process.env
-export const REMOTE_SERVER = import.meta.env.VITE_REMOTE_SERVER || "http://localhost:4000";
+export const REMOTE_SERVER = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
 export const USERS_API = `${REMOTE_SERVER}/api/users`;
 
 export const findAllUsers = async (): Promise<User[]> => {

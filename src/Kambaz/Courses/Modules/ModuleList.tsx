@@ -7,7 +7,7 @@ import { User } from '../../../contexts/UserContext';
 import { useUser } from '../../../contexts/useUser';
 import './Module.css';
 
-// 檢查用戶是否有權限編輯模組（ADMIN 或 FACULTY 角色）
+// Check ADMIN or FACULTY 
 const hasEditPermission = (user: User | null) => {
   return user && (user.role === 'ADMIN' || user.role === 'FACULTY');
 };
