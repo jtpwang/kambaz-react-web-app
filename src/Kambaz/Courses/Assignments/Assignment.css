@@ -1,0 +1,306 @@
+/* Assignment list container styling */
+.wd-assignments {
+  width: 100%;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Search bar and buttons */
+.wd-search-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.wd-search-assignments {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  min-width: 200px;
+}
+
+.wd-add-assignment-group,
+.wd-add-assignment {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  cursor: pointer;
+  font-size: 14px;
+  text-decoration: none;
+  color: #333;
+  display: inline-block;
+  text-align: center;
+}
+
+.wd-add-assignment {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.wd-add-assignment:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+/* Assignment title section */
+.wd-assignments-title {
+  margin: 20px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wd-assignments-title a {
+  text-decoration: none;
+  font-size: 20px;
+  color: #007bff;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #e9ecef;
+}
+
+.wd-assignments-title a:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Assignment list styling */
+.wd-assignment-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.wd-assignment-list-item {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 15px;
+  background-color: #f8f9fa;
+}
+
+.assignment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.wd-assignment-link {
+  font-size: 18px;
+  text-decoration: none;
+  color: #007bff;
+  font-weight: 500;
+}
+
+.wd-assignment-link:hover {
+  text-decoration: underline;
+}
+
+.unpublished-badge {
+  font-size: 12px;
+  color: #dc3545;
+  font-weight: normal;
+}
+
+.assignment-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.publish-btn,
+.edit-btn,
+.delete-btn {
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  border: 1px solid #ddd;
+}
+
+.publish-btn {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  border-color: #dc3545;
+}
+
+.assignment-info {
+  font-size: 14px;
+  color: #6c757d;
+  line-height: 1.5;
+}
+
+/* Error, loading, and no assignments states */
+.loading,
+.error,
+.no-assignments {
+  text-align: center;
+  padding: 30px;
+  color: #6c757d;
+}
+
+.error,
+.error-message {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border-radius: 4px;
+  padding: 15px;
+  margin: 20px 0;
+}
+
+/* Assignment form styling */
+.assignment-form-container {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.assignment-form-container h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.assignment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.checkbox-group {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.checkbox-group input {
+  margin: 0;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cancel-button,
+.submit-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cancel-button {
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  color: #495057;
+}
+
+.submit-button {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Grading section styling */
+.submission-grade-section {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+  border-left: 4px solid #28a745;
+}
+
+.submission-grade-section h3 {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.grade-display {
+  font-size: 1.5rem;
+  margin: 10px 0;
+}
+
+.grade-display strong {
+  color: #28a745;
+  font-size: 1.8rem;
+}
+
+.feedback-section {
+  margin-top: 15px;
+  border-top: 1px solid #dee2e6;
+  padding-top: 10px;
+}
+
+.feedback-section h4 {
+  margin-top: 0;
+  font-size: 1rem;
+  color: #555;
+}
+
+.feedback-content {
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  white-space: pre-wrap;
+}

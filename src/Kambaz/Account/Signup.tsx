@@ -1,71 +1,153 @@
+import { FaUserPlus, FaExclamationTriangle, FaCheckCircle } from "react-icons/fa";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import * as client from "./client";
-import { useDispatch } from "react-redux";
-import { setCurrentUser } from "./reducer";
+import axios from "axios";
+import { API_BASE } from "../../services/api";
 
 export default function Signup() {
-  const [user, setUser] = useState<any>({});
-  const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [verifyPassword, setVerifyPassword] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const signup = async () => {
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSuccess(false);
+    setIsLoading(true);
+
+    // Form validation
+    if (!username) {
+      setError("Username is required");
+      setIsLoading(false);
+      return;
+    }
+
+    if (!password) {
+      setError("Password is required");
+      setIsLoading(false);
+      return;
+    }
+
+    if (password !== verifyPassword) {
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      setError(null);
+      // Send signup request to backend
+      const response = await axios.post(`${API_BASE}/api/users/signup`, {
+        username,
+        password,
+        role: "USER"
+      }, {
+        withCredentials: true
+      });
 
-      if (!user.username || !user.password) {
-        setError("Please enter username and password");
+      const data = response.data;
+
+      if (!data) {
+        // Signup failed
+        setError("Signup failed");
+        setIsLoading(false);
         return;
       }
 
-      const currentUser = await client.signup(user);
+      // Signup successful
+      setError("");
+      setSuccess(true);
+      setIsLoading(false);
 
-      if (!currentUser) {
-        setError("Failed to register, please try again later");
-        return;
+      // Delayed redirect to show success message
+      setTimeout(() => {
+        window.location.href = "/Kambaz/Account/Signin";
+      }, 2000);
+
+    } catch (error) {
+      setIsLoading(false);
+
+      // Handle different types of errors
+      if (axios.isAxiosError(error) && error.response) {
+        // Backend returned error
+        if (error.response.status === 400) {
+          // Check if username is already taken
+          if (error.response.data?.message?.includes("Username already taken")) {
+            setError(`Username "${username}" already exists, please try another username`);
+          } else {
+            setError(error.response.data?.message || "Invalid registration data");
+          }
+        } else if (error.response.status === 500) {
+          setError("Server error, please try again later");
+        } else {
+          setError(`Signup failed: ${error.response.data?.message || error.message}`);
+        }
+      } else {
+        setError("Signup failed");
       }
 
-      dispatch(setCurrentUser(currentUser));
-      navigate("/Kambaz/Account/Profile");
-    } catch (err: any) {
-      console.error("Error during signup:", err);
-      const errorMessage = err.response?.data?.message || "Failed to register, please try again later";
-      setError(errorMessage);
+      console.error("Signup error:", error);
     }
   };
 
   return (
-    <div id="wd-signup-screen">
-      <h1>Sign Up</h1>
-      {error && <div className="alert alert-danger">{error}</div>}
+    <div id="wd-signup-screen" className="p-4">
+      <h3 className="mb-4">Sign up</h3>
 
-      <input
-        value={user.username || ""}
-        onChange={(e) => setUser({ ...user, username: e.target.value })}
-        className="form-control mb-2 wd-username"
-        placeholder="Username"
-      />
+      {error && (
+        <div className="alert alert-danger mb-3" role="alert">
+          <FaExclamationTriangle className="me-2" />
+          {error}
+        </div>
+      )}
 
-      <input
-        value={user.password || ""}
-        onChange={(e) => setUser({ ...user, password: e.target.value })}
-        type="password"
-        className="form-control mb-2 wd-password"
-        placeholder="Password"
-      />
+      {success && (
+        <div className="alert alert-success mb-3" role="alert">
+          <FaCheckCircle className="me-2" />
+          Registered successfully! Redirecting to signin page...
+        </div>
+      )}
 
-      <button
-        onClick={signup}
-        className="btn btn-primary w-100 mb-2 wd-signup-btn">
-        Sign Up
-      </button>
+      <form onSubmit={handleSignup}>
+        <input
+          placeholder="username"
+          className="form-control mb-4"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          disabled={isLoading}
+        />
 
-      <div className="mt-2">
-        <Link to="/Kambaz/Account/Signin" className="wd-signin-link">
-          Already have an account? Login
-        </Link>
-      </div>
+        <input
+          placeholder="password"
+          type="password"
+          className="form-control mb-4"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          disabled={isLoading}
+        />
+
+        <input
+          placeholder="verify password"
+          type="password"
+          className="form-control mb-4"
+          value={verifyPassword}
+          onChange={(e) => setVerifyPassword(e.target.value)}
+          disabled={isLoading}
+        />
+
+        <button type="submit" className="btn btn-primary w-100" style={{ backgroundColor: "#0275d8", borderColor: "#0275d8" }} disabled={isLoading}>
+          {isLoading ? (
+            <>
+              <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+              Processing...
+            </>
+          ) : (
+            <>
+              <FaUserPlus className="me-2" /> Sign up
+            </>
+          )}
+        </button>
+      </form>
     </div>
   );
 }

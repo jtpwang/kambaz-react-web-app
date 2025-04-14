@@ -1,0 +1,143 @@
+.wd-people {
+  padding: 20px;
+}
+
+.search-bar {
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  width: 300px;
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.participant-section {
+  margin-bottom: 30px;
+}
+
+.participant-section h3 {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 8px;
+  margin-bottom: 15px;
+}
+
+.participant-list {
+  list-style: none;
+  padding: 0;
+}
+
+.participant-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.participant-info {
+  flex: 1;
+}
+
+.participant-name {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.participant-email {
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.participant-joined {
+  font-size: 12px;
+  color: #888;
+}
+
+.no-results {
+  color: #666;
+  font-style: italic;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+/* 分頁樣式 */
+.pagination-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.page-numbers {
+  display: flex;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.page-button {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  color: #007bff;
+  padding: 8px 12px;
+  margin: 0 3px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.page-button:hover {
+  background-color: #e9ecef;
+}
+
+.page-button.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.page-button:disabled {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+.nav-button {
+  background-color: #f8f9fa;
+  min-width: 90px;
+}
+
+.ellipsis {
+  margin: 0 5px;
+}
+
+.limit-selector {
+  margin-left: 15px;
+  display: flex;
+  align-items: center;
+}
+
+.limit-selector label {
+  margin-right: 5px;
+}
+
+.limit-selector select {
+  padding: 5px;
+  border-radius: 4px;
+  border: 1px solid #dee2e6;
+}

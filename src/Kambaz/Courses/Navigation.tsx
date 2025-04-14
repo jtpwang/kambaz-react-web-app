@@ -1,41 +1,33 @@
 import { Link, useParams } from "react-router-dom";
-import { useLocation } from "react-router";
 
 export default function CourseNavigation() {
-    const { cid } = useParams();
-    const { pathname } = useLocation();
+    const { courseId } = useParams<{ courseId: string }>();
 
-    const links = [
-        "Home",
-        "Modules",
-        "Piazza",
-        "Zoom",
-        "Assignments",
-        "Quizzes",
-        "Grades",
-        "People",
-    ];
-    
     return (
-        <div id="wd-courses-navigation" className="list-group fs-6">
-            {links.map((link, index) => {
-                const isActive = pathname.includes(link);
-                return (
-                    <Link
-                        key={index}
-                        to={`/Kambaz/Courses/${cid}/${link}`}
-                        id={`wd-course-${link.toLowerCase()}-link`}
-                        className={`list-group-item py-2 border-0 ${isActive ? "active fw-bold" : ""}`}
-                        style={{ 
-                            color: isActive ? "red" : "#666",
-                            backgroundColor: "transparent",
-                            borderRadius: 0
-                        }}
-                    >
-                        {link}
-                    </Link>
-                );
-            })}
+        <div className="wd-courses-navigation">
+            <ul>
+                <li>
+                    <Link to={`/Kambaz/Courses/${courseId}/Home`} className="wd-course-home-link">Home</Link>
+                </li>
+                <li>
+                    <Link to={`/Kambaz/Courses/${courseId}/Modules`} className="wd-course-modules-link">Modules</Link>
+                </li>
+                <li>
+                    <Link to={`/Kambaz/Courses/${courseId}/Piazza`} className="wd-course-piazza-link">Piazza</Link>
+                </li>
+                <li>
+                    <Link to={`/Kambaz/Courses/${courseId}/Zoom`} className="wd-course-zoom-link">Zoom</Link>
+                </li>
+                <li>
+                    <Link to={`/Kambaz/Courses/${courseId}/Assignments`} className="wd-course-assignments-link">Assignments</Link>
+                </li>
+                <li>
+                    <Link to={`/Kambaz/Courses/${courseId}/Quizzes`} className="wd-course-quizzes-link">Quizzes</Link>
+                </li>
+                <li>
+                    <Link to={`/Kambaz/Courses/${courseId}/Grades`} className="wd-course-grades-link">Grades</Link>
+                </li>
+            </ul>
         </div>
     );
 }

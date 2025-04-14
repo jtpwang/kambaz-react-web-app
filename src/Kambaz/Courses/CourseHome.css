@@ -1,0 +1,125 @@
+.course-home {
+  padding: 10px 0;
+}
+
+.course-info-section {
+  margin-bottom: 30px;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.course-info-section h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+  font-size: 1.4rem;
+}
+
+.course-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.course-info-item {
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.course-info-item strong {
+  color: #444;
+}
+
+.course-description-box {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.course-description-box h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #444;
+}
+
+.course-description-box p {
+  margin: 0;
+  line-height: 1.6;
+  color: #555;
+}
+
+.course-announcements {
+  margin-top: 30px;
+}
+
+.announcements-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.announcements-header h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.4rem;
+}
+
+.btn-add-announcement {
+  background-color: #4285f4;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-add-announcement:hover {
+  background-color: #3367d6;
+}
+
+.announcements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.announcement-item {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.announcement-item h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.announcement-meta {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.announcement-item p {
+  margin: 0;
+  line-height: 1.6;
+  color: #444;
+}
+
+.no-announcements {
+  background-color: #f9f9f9;
+  padding: 20px;
+  text-align: center;
+  border-radius: 8px;
+  color: #666;
+}

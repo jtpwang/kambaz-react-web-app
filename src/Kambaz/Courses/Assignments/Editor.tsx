@@ -1,288 +1,217 @@
-import {
-    Button,
-    FormCheck,
-    FormControl,
-    FormGroup,
-    FormLabel,
-    FormSelect,
-} from "react-bootstrap";
-
-import FormCheckLabel from "react-bootstrap/FormCheckLabel";
-import FormCheckInput from "react-bootstrap/FormCheckInput";
-import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect } from "react";
-import { addAssignment, updateAssignment } from "./reducer";
-import * as assignmentsClient from "./client";
-
-export default function AssignmentEditor({ currentUser }: { currentUser?: any }) {
-    const { aid, cid } = useParams();
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
-    
-    // check faculty
-    const isFaculty = currentUser && currentUser.role === "FACULTY";
-    useEffect(() => {
-        if (!isFaculty) {
-            navigate(`/Kambaz/Courses/${cid}/Assignments`);
-        }
-    }, [isFaculty, cid, navigate]);
-    
-    const { assignment: storeAssignment, assignments } = useSelector((state: any) => state.assignmentsReducer);
-    
-    const existingAssignment = aid && aid !== "new" ? 
-        assignments.find((a: any) => a._id === aid) : null;
-    
-    const [assignment, setAssignment] = useState<any>(
-        storeAssignment || 
-        existingAssignment || 
-        {
-            title: "",
-            description: "",
-            points: 100,
-            course: cid,
-            dueDate: new Date().toISOString().split('T')[0],
-            availableFrom: new Date().toISOString().split('T')[0],
-            availableUntil: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString().split('T')[0]
-        }
-    );
-    
-    useEffect(() => {
-        if (storeAssignment) {
-            setAssignment(storeAssignment);
-        } else if (existingAssignment) {
-            setAssignment(existingAssignment);
-        }
-    }, [storeAssignment, existingAssignment]);
-    
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-        const { id, value } = e.target;
-        setAssignment({ ...assignment, [id.replace('wd-', '')]: value });
-    };
-    
-
-    const handleSave = async () => {
-        if (!assignment.title || !assignment.description) {
-            alert("Please fill in the title and description");
-            return;
-        }
-        
-        try {
-            if (aid === "new") {
-                // Create new assignment
-                const newAssignment = await assignmentsClient.createAssignment(cid as string, {
-                    ...assignment,
-                    course: cid
-                });
-                dispatch(addAssignment(newAssignment));
-            } else {
-                // Update existing assignment
-                const updatedAssignment = await assignmentsClient.updateAssignment(assignment);
-                dispatch(updateAssignment(updatedAssignment));
-            }
-            
-            navigate(`/Kambaz/Courses/${cid}/Assignments`);
-        } catch (error) {
-            console.error("Error saving assignment:", error);
-            alert("Error saving assignment, please try again later");
-        }
-    };
-    
-    const handleCancel = () => {
-        navigate(`/Kambaz/Courses/${cid}/Assignments`);
-    };
-    
+export default function AssignmentEditor() {
     return (
-        <div id="wd-assignments-editor" className="me-3 ms-3">
-            <div className="row mb-3">
-                <FormGroup>
-                    <FormLabel htmlFor="wd-title">Assignment Name </FormLabel>
-                    <FormControl
-                        id="wd-title"
-                        value={assignment.title || ""}
-                        onChange={handleChange}
-                    />
-                </FormGroup>
-            </div>
-            <div className="row mb-3">
-                <div>
-                    <FormLabel htmlFor="wd-description">Description</FormLabel>
-                    <FormControl 
-                        as="textarea" 
-                        id="wd-description"
-                        value={assignment.description || ""}
-                        onChange={handleChange}
-                        rows={5}
-                    />
-                </div>
-            </div>
-            <FormGroup controlId="wd-points" className="row mb-3">
-                <FormLabel className="wd-assignment-editor-label col-4 col-form-label">
-                    Points
-                </FormLabel>
-                <div className="col-8">
-                    <FormControl 
-                        value={assignment.points || 100}
-                        onChange={handleChange}
-                        type="number"
-                    />
-                </div>
-            </FormGroup>
-            <FormGroup className="row mb-3" controlId="wd-group">
-                <FormLabel className="wd-assignment-editor-label col-4 col-form-label">
-                    Assignment Group
-                </FormLabel>
-                <div className="col-8">
-                    <FormSelect>
-                        <option value="1">ASSIGNMENTS</option>
-                        <option value="2">Quizzes</option>
-                        <option value="3">Projects</option>
-                        <option value="4">Exams</option>
-                    </FormSelect>
-                </div>
-            </FormGroup>
-            <FormGroup className="row mb-3" controlId="wd-display-grade-as">
-                <FormLabel className="wd-assignment-editor-label col-4 col-form-label">
-                    Display grade as
-                </FormLabel>
-                <div className="col-8">
-                    <FormSelect>
-                        <option value="1">Percentage</option>
-                        <option value="2">Complete/Incomplete</option>
-                        <option value="3">Letter Grade</option>
-                    </FormSelect>
-                </div>
-            </FormGroup>
-            <div className="row mb-3">
-                <FormLabel
-                    htmlFor="wd-submission-type"
-                    className="col-4 wd-assignment-editor-label col-form-label"
+        <div id="wd-assignments-editor" style={{ maxWidth: '500px', margin: '0 auto' }}>
+            <div style={{ marginBottom: '20px' }}>
+                <label
+                    htmlFor="wd-name"
+                    style={{
+                        display: 'block',
+                        fontWeight: 'bold',
+                        marginBottom: '5px',
+                        fontSize: '16px',
+                    }}
                 >
-                    Submission Type
-                </FormLabel>
-                <div className="col-8">
-                    <div className="border-1 border rounded-2 p-2">
-                        <div className="mb-3">
-                            <FormSelect id="wd-submission-type">
-                                <option value="1">Online</option>
-                                <option value="2">In Person</option>
-                                <option value="3">External Tool</option>
-                            </FormSelect>
-                        </div>
-                        <FormGroup controlId="online-entry-options" className="mb-3">
-                            <FormLabel className="fw-bold mb-1">
-                                Online Entry Options
-                            </FormLabel>
-                            <FormCheck className="mb-3">
-                                <FormCheckLabel htmlFor="wd-text-entry">
-                                    Text Entry
-                                </FormCheckLabel>
-                                <FormCheckInput
-                                    id="wd-text-entry"
-                                    name="online-entry-options"
-                                />
-                            </FormCheck>
-                            <FormCheck className="mb-3">
-                                <FormCheckLabel htmlFor="wd-website-url">
-                                    Website URL
-                                </FormCheckLabel>
-                                <FormCheckInput
-                                    id="wd-website-url"
-                                    name="online-entry-options"
-                                />
-                            </FormCheck>
-                            <FormCheck className="mb-3">
-                                <FormCheckLabel htmlFor="wd-media-recordings">
-                                    Media Recordings
-                                </FormCheckLabel>
-                                <FormCheckInput
-                                    id="wd-media-recordings"
-                                    name="online-entry-options"
-                                />
-                            </FormCheck>
-                            <FormCheck className="mb-3">
-                                <FormCheckLabel htmlFor="wd-student-annotation">
-                                    Student Annotation
-                                </FormCheckLabel>
-                                <FormCheckInput
-                                    id="wd-student-annotation"
-                                    name="online-entry-options"
-                                />
-                            </FormCheck>
-                            <FormCheck className="mb-3">
-                                <FormCheckLabel htmlFor="wd-file-upload">
-                                    File Uploads
-                                </FormCheckLabel>
-                                <FormCheckInput
-                                    id="wd-file-upload"
-                                    name="online-entry-options"
-                                />
-                            </FormCheck>
-                        </FormGroup>
-                    </div>
-                </div>
+                    Assignment Name
+                </label>
+                <input
+                    id="wd-name"
+                    value="A1 - ENV + HTML"
+                    style={{
+                        display: 'block',
+                        width: '100%',
+                        padding: '8px',
+                        fontSize: '14px',
+                    }}
+                />
             </div>
-            <div className="row mb-4">
-                <FormLabel className="wd-assignment-editor-label col-4 col-form-label">
-                    Assign
-                </FormLabel>
-                <div className="col-8">
-                    <div className="border border-1 rounded-2 p-2">
-                        <FormGroup controlId="wd-assign-to" className="mb-3">
-                            <FormLabel className="fw-bold mb-1">Assign To</FormLabel>
-                            <FormControl defaultValue="Everyone" />
-                        </FormGroup>
-                        <FormGroup controlId="wd-dueDate" className="mb-3">
-                            <FormLabel className="fw-bold mb-1">Due</FormLabel>
-                            <FormControl
-                                type="date"
-                                value={assignment.dueDate || ""}
-                                onChange={handleChange}
+            <div style={{ marginBottom: '20px' }}>
+                <textarea
+                    id="wd-description"
+                    style={{
+                        display: 'block',
+                        width: '100%',
+                        height: '120px',
+                        padding: '8px',
+                        fontSize: '14px',
+                    }}
+                >
+                    The assignment is available online Submit a link to the
+                    landing page of your Web application running on Netlify. The
+                    landing page should include the following: - Your full name
+                    and section - Links to each of the lab assignments - Link to
+                    the Kambaz application - Links to all relevant source code
+                    repositories - The Kambaz application should include a link
+                    to navigate back to the landing page.
+                </textarea>
+            </div>
+            <table style={{ width: '100%', marginBottom: '20px' }}>
+                <tbody>
+                    <tr>
+                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                            <label htmlFor="wd-points">Points</label>
+                        </td>
+                        <td>
+                            <input
+                                id="wd-points"
+                                type="number"
+                                value={100}
+                                style={{
+                                    width: '100%',
+                                    padding: '8px',
+                                    fontSize: '14px',
+                                }}
                             />
-                        </FormGroup>
-                        <div className="row">
-                            <div className="col-6">
-                                <FormGroup controlId="wd-availableFrom">
-                                    <FormLabel className="fw-bold mb-1">Available From</FormLabel>
-                                    <FormControl
-                                        type="date"
-                                        value={assignment.availableFrom || ""}
-                                        onChange={handleChange}
-                                    />
-                                </FormGroup>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                            <label htmlFor="wd-group">Assignment Group</label>
+                        </td>
+                        <td>
+                            <select
+                                id="wd-group"
+                                style={{
+                                    width: '100%',
+                                    padding: '8px',
+                                    fontSize: '14px',
+                                }}
+                            >
+                                <option value="ASSIGNMENTS">ASSIGNMENTS</option>
+                                <option value="QUIZZES">QUIZZES</option>
+                                <option value="EXAMS">EXAMS</option>
+                                <option value="PROJECTS">PROJECTS</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                            <label htmlFor="wd-display-grade-as">Display Grade as</label>
+                        </td>
+                        <td>
+                            <select
+                                id="wd-display-grade-as"
+                                style={{
+                                    width: '100%',
+                                    padding: '8px',
+                                    fontSize: '14px',
+                                }}
+                            >
+                                <option value="Percentage">Percentage</option>
+                                <option value="Complete/Incomplete">Complete/Incomplete</option>
+                                <option value="Letter Grade">Letter Grade</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                            <label htmlFor="wd-submission-type">Submission Type</label>
+                        </td>
+                        <td>
+                            <select
+                                id="wd-submission-type"
+                                style={{
+                                    width: '100%',
+                                    padding: '8px',
+                                    fontSize: '14px',
+                                }}
+                            >
+                                <option value="Online">Online</option>
+                                <option value="On Paper">On Paper</option>
+                                <option value="No Submission">No Submission</option>
+                            </select>
+                            <div style={{ marginTop: '10px' }}>
+                                <label style={{ display: 'block', marginBottom: '5px' }}>
+                                    <input type="checkbox" id="wd-text-entry" /> Text Entry
+                                </label>
+                                <label style={{ display: 'block', marginBottom: '5px' }}>
+                                    <input type="checkbox" id="wd-website-url" /> Website URL
+                                </label>
+                                <label style={{ display: 'block', marginBottom: '5px' }}>
+                                    <input type="checkbox" id="wd-media-recordings" /> Media
+                                    Recordings
+                                </label>
+                                <label style={{ display: 'block', marginBottom: '5px' }}>
+                                    <input type="checkbox" id="wd-student-annotation" /> Student
+                                    Annotation
+                                </label>
+                                <label style={{ display: 'block', marginBottom: '5px' }}>
+                                    <input type="checkbox" id="wd-file-upload" /> File Uploads
+                                </label>
                             </div>
-                            <div className="col-6">
-                                <FormGroup controlId="wd-availableUntil">
-                                    <FormLabel className="fw-bold mb-1">
-                                        Available Until
-                                    </FormLabel>
-                                    <FormControl
-                                        type="date"
-                                        value={assignment.availableUntil || ""}
-                                        onChange={handleChange}
-                                    />
-                                </FormGroup>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="float-end mb-3">
-                <div className="d-flex">
-                    <Button 
-                        variant="secondary" 
-                        className="me-1"
-                        onClick={handleCancel}
-                    >
-                        Cancel
-                    </Button>
-                    <Button 
-                        variant="danger"
-                        onClick={handleSave}
-                    >
-                        Save
-                    </Button>
-                </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                            <label htmlFor="wd-assign-to">Assign To</label>
+                        </td>
+                        <td>
+                            <input
+                                id="wd-assign-to"
+                                value="Everyone"
+                                style={{
+                                    width: '100%',
+                                    padding: '8px',
+                                    fontSize: '14px',
+                                }}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                            <label htmlFor="wd-due-date">Due</label>
+                        </td>
+                        <td>
+                            <input
+                                id="wd-due-date"
+                                type="date"
+                                value="2024-05-13"
+                                style={{
+                                    width: '100%',
+                                    padding: '8px',
+                                    fontSize: '14px',
+                                }}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                            <label htmlFor="wd-available-from">Available from</label>
+                        </td>
+                        <td>
+                            <input
+                                id="wd-available-from"
+                                type="date"
+                                value="2024-05-06"
+                                style={{
+                                    width: '100%',
+                                    padding: '8px',
+                                    fontSize: '14px',
+                                }}
+                            />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style={{ textAlign: 'right', paddingRight: '10px' }}>
+                            <label htmlFor="wd-available-until">Until</label>
+                        </td>
+                        <td>
+                            <input
+                                id="wd-available-until"
+                                type="date"
+                                value="2024-05-20"
+                                style={{
+                                    width: '100%',
+                                    padding: '8px',
+                                    fontSize: '14px',
+                                }}
+                            />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style={{ textAlign: 'center' }}>
+                <button style={{ marginRight: '10px', padding: '8px 12px' }}>Cancel</button>
+                <button style={{ padding: '8px 12px' }}>Save</button>
             </div>
         </div>
     );
