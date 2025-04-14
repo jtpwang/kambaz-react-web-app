@@ -1,3 +1,4 @@
+console.log('BaseURL:', import.meta.env.VITE_API_BASE_URL);
 // API 基礎 URL 設定
 export const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000';
 
