@@ -43,28 +43,27 @@ export default function Signup() {
         role: "USER"
       }, {
         withCredentials: true
-      }).then(res => console.log(res.data))
-      .catch(err => console.error(err));
+      });
       
 
-      // const data = response.data;
+      const data = response.data;
 
-      // if (!data) {
-      //   // Signup failed
-      //   setError("Signup failed");
-      //   setIsLoading(false);
-      //   return;
-      // }
+      if (!data) {
+        // Signup failed
+        setError("Signup failed");
+        setIsLoading(false);
+        return;
+      }
 
-      // // Signup successful
-      // setError("");
-      // setSuccess(true);
-      // setIsLoading(false);
+      // Signup successful
+      setError("");
+      setSuccess(true);
+      setIsLoading(false);
 
-      // // Delayed redirect to show success message
-      // setTimeout(() => {
-      //   window.location.href = "/Kambaz/Account/Signin";
-      // }, 2000);
+      // Delayed redirect to show success message
+      setTimeout(() => {
+        window.location.href = "/Kambaz/Account/Signin";
+      }, 2000);
 
     } catch (error) {
       setIsLoading(false);
