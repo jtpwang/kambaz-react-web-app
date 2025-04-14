@@ -46,7 +46,9 @@ export const getAllAssignments = async (courseId: string): Promise<ApiResponse<{
     console.log("後端回應的原始數據:", response.data);
 
     // 檢查後端回應格式
-    const { assignments = [], pagination = {} } = response.data || {};
+    const { assignments = [], pagination: _pagination = {} } = response.data || {};
+    // const { assignments = [], pagination = {} } = response.data || {};
+
 
     // 無論後端回應如何，我們都轉換為前端需要的格式
     return {
