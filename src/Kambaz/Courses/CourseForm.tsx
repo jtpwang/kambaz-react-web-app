@@ -56,7 +56,7 @@ const CourseForm: React.FC<CourseFormProps> = ({ isModal = false, courseIdToEdit
           name: courseData.name,
           description: courseData.description,
           imageUrl: courseData.imageUrl || '',
-          // 為缺少的必要欄位提供預設值
+          
           startDate: (courseData as any).startDate || '',
           endDate: (courseData as any).endDate || '',
           department: (courseData as any).department || '',

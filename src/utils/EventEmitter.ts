@@ -1,10 +1,11 @@
-// 簡單的事件發射器工具，用於在不同組件間通信
+
+// Simple event emitter tool for communication between different components
 type EventHandler = (...args: any[]) => void;
 
 class EventEmitter {
   private events: Record<string, EventHandler[]> = {};
 
-  // 註冊事件監聽器
+  // Register event listener
   on(event: string, handler: EventHandler): void {
     if (!this.events[event]) {
       this.events[event] = [];
@@ -12,7 +13,7 @@ class EventEmitter {
     this.events[event].push(handler);
   }
 
-  // 移除事件監聽器
+  // Remove the event listener
   off(event: string, handler: EventHandler): void {
     if (!this.events[event]) {
       return;
@@ -20,7 +21,7 @@ class EventEmitter {
     this.events[event] = this.events[event].filter(h => h !== handler);
   }
 
-  // 觸發事件
+  // trigger event
   emit(event: string, ...args: any[]): void {
     if (!this.events[event]) {
       return;
@@ -34,7 +35,7 @@ class EventEmitter {
     });
   }
 
-  // 只監聽一次事件
+  // Only listen for one event
   once(event: string, handler: EventHandler): void {
     const onceHandler = (...args: any[]) => {
       handler(...args);
@@ -44,5 +45,5 @@ class EventEmitter {
   }
 }
 
-// 創建一個單例實例，以便在整個應用中共享
+// Create a singleton instance to share across the application
 export const eventEmitter = new EventEmitter();

@@ -14,7 +14,6 @@ export default function App() {
             {/* Main Redirect */}
             <Route path="/" element={<Navigate to="/Kambaz" />} />
 
-            {/* Kambaz 應用路由 - 帶條件保護 */}
             <Route 
               path="/Kambaz/*" 
               element={<Kambaz />}

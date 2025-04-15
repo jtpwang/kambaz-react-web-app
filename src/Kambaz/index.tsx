@@ -16,17 +16,14 @@ export default function Kambaz() {
         <Routes>
           <Route path="/" element={<Navigate to="Account" />} />
           
-          {/* 公開路由 - Account 區域處理自己的授權邏輯 */}
           <Route path="/Account/*" element={<Account />} />
           
-          {/* 受保護路由 - 需要登入才能訪問 */}
           <Route path="/Dashboard" element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
           } />
           
-          {/* 保護所有課程相關路徑 */}
           <Route path="/Courses" element={
             <ProtectedRoute>
               <Navigate to="/Kambaz/Dashboard" replace />

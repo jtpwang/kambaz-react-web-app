@@ -7,7 +7,7 @@ import { CourseHomeWrapper } from './CourseHome';
 import Modules from './Modules';
 import Assignments from './Assignments';
 import People from './People';
-import CourseForm from './CourseForm'; // 引入 CourseForm 組件
+import CourseForm from './CourseForm';
 import './CourseDetail.css';
 
 /**
@@ -26,36 +26,36 @@ const CourseDetail: React.FC = () => {
   // Fetch course details when component mounts or courseId changes
   useEffect(() => {
     const fetchCourseDetails = async () => {
-      // 嘗試獲取真實的課程 ID 並處理各種路徑格式
+      // Attempt to get the real course ID and handle various path formats
       let realCourseId = cid;
-      
-      // 檢查 courseId 是否包含子路徑
+
+      // Check if courseId contains a subpath
       if (cid && cid.includes('/')) {
-        // 確保獲取正確的課程 ID，不受後續路徑段影響
+        // Ensure we extract the correct course ID, unaffected by subsequent path segments
         const pathParts = cid.split('/');
-        // 如果第一個部分是一個可能的課程 ID (不包含 'home', 'assignments' 等關鍵字)
+        // If the first part is a possible course ID (and not 'home', 'assignments', etc.)
         if (!['home', 'modules', 'assignments', 'people'].includes(pathParts[0])) {
           realCourseId = pathParts[0];
         } else {
-          // 如果不是有效的課程 ID，可能有其他問題
+          // If it's not a valid course ID, there might be another issue
           console.error(`Invalid course ID format: ${cid}`);
         }
-        console.log(`修正的課程ID: 從 '${cid}' 提取為 '${realCourseId}'`);
+        console.log(`Corrected course ID: extracted '${realCourseId}' from '${cid}'`);
       }
-      
+
       if (!realCourseId) {
-        console.error('找不到有效的課程ID');
-        setError('無法載入課程：未找到有效的課程ID');
+        console.error('No valid course ID found');
+        setError('Unable to load course: No valid course ID found');
         setLoading(false);
         return;
       }
-      
-      console.log(`正在載入課程詳情，ID: ${realCourseId}`);
-      
+
+      console.log(`Loading course details, ID: ${realCourseId}`);
+
       try {
         setLoading(true);
         const courseData = await CourseService.getCourseById(realCourseId);
-        console.log('成功載入課程詳情:', courseData.name);
+        console.log('Successfully loaded course details:', courseData.name);
         setCourse(courseData);
         setError(null);
       } catch (err: Error | unknown) {
@@ -65,29 +65,29 @@ const CourseDetail: React.FC = () => {
         setLoading(false);
       }
     };
-    
+
     fetchCourseDetails();
   }, [cid]);
-  
+
   // Show loading state
   if (loading) {
     return <div className="course-loading">Loading course...</div>;
   }
-  
+
   // Show error state
   if (error) {
     return <div className="course-error">{error}</div>;
   }
-  
+
   // Show not found state
   if (!course) {
     return <div className="course-not-found">Course not found.</div>;
   }
-  
+
   // Handle course deletion, ensuring courseId is valid
   const handleDeleteCourse = () => {
     if (!cid) return;
-    
+
     if (window.confirm('Are you sure you want to delete this course? This action cannot be undone.')) {
       CourseService.deleteCourse(cid)
         .then(() => {
@@ -99,52 +99,52 @@ const CourseDetail: React.FC = () => {
         });
     }
   };
-  
+
   // Handle editing course
   const handleEditCourse = () => {
-    // 顯示編輯模態框
-    console.log(`打開課程編輯模態框，課程ID: ${cid}`);
+    // Show the edit modal
+    console.log(`Opening course edit modal, course ID: ${cid}`);
     setShowEditModal(true);
   };
-  
-  // 處理編輯成功的回調
+
+  // Callback for successful edit
   const handleEditSuccess = () => {
-    console.log('課程編輯成功，關閉模態框');
+    console.log('Course edited successfully, closing modal');
     setShowEditModal(false);
-    
-    // 重新獲取課程詳情以更新頁面
+
+    // Refetch course details to update the page
     if (cid) {
       const fetchCourseDetails = async () => {
-        // 嘗試獲取真實的課程 ID 並處理各種路徑格式
+        // Attempt to get the real course ID and handle various path formats
         let realCourseId = cid;
-        
-        // 檢查 courseId 是否包含子路徑
+
+        // Check if courseId contains a subpath
         if (cid && cid.includes('/')) {
-          // 確保獲取正確的課程 ID，不受後續路徑段影響
+          // Ensure we extract the correct course ID, unaffected by subsequent path segments
           const pathParts = cid.split('/');
-          // 如果第一個部分是一個可能的課程 ID (不包含 'home', 'assignments' 等關鍵字)
+          // If the first part is a potential course ID (not 'home', 'assignments', etc.)
           if (!['home', 'modules', 'assignments', 'people'].includes(pathParts[0])) {
             realCourseId = pathParts[0];
           } else {
-            // 如果不是有效的課程 ID，可能有其他問題
+            // If it's not a valid course ID, there might be another issue
             console.error(`Invalid course ID format: ${cid}`);
           }
-          console.log(`修正的課程ID: 從 '${cid}' 提取為 '${realCourseId}'`);
+          console.log(`Corrected course ID: extracted '${realCourseId}' from '${cid}'`);
         }
-        
+
         if (!realCourseId) {
-          console.error('找不到有效的課程ID');
-          setError('無法載入課程：未找到有效的課程ID');
+          console.error('No valid course ID found');
+          setError('Unable to load course: No valid course ID found');
           setLoading(false);
           return;
         }
-        
-        console.log(`正在載入課程詳情，ID: ${realCourseId}`);
-        
+
+        console.log(`Loading course details, ID: ${realCourseId}`);
+
         try {
           setLoading(true);
           const courseData = await CourseService.getCourseById(realCourseId);
-          console.log('成功載入課程詳情:', courseData.name);
+          console.log('Successfully loaded course details:', courseData.name);
           setCourse(courseData);
           setError(null);
         } catch (err: Error | unknown) {
@@ -154,33 +154,33 @@ const CourseDetail: React.FC = () => {
           setLoading(false);
         }
       };
-      
+
       fetchCourseDetails();
     }
   };
-  
-  // 處理關閉模態框
+
+  // Handle closing the edit modal
   const handleCloseEditModal = () => {
-    console.log('關閉課程編輯模態框');
+    console.log('Closing course edit modal');
     setShowEditModal(false);
   };
-  
+
   return (
     <div className="course-detail">
       <div className="course-header">
         <h2>{course.number}: {course.name}</h2>
         <p className="course-description">{course.description}</p>
-        
+
         {/* Admin/Faculty Actions */}
         {currentUser && (currentUser.role === 'ADMIN' || currentUser.role === 'FACULTY') && (
           <div className="course-admin-actions">
-            <button 
+            <button
               className="btn-edit"
               onClick={handleEditCourse}
             >
               Edit Course
             </button>
-            <button 
+            <button
               className="btn-delete"
               onClick={handleDeleteCourse}
             >
@@ -189,9 +189,9 @@ const CourseDetail: React.FC = () => {
           </div>
         )}
       </div>
-      
+
       <hr />
-      
+
       <div className="course-content">
         <div className="course-sidebar">
           <CourseNavigation />
@@ -206,8 +206,7 @@ const CourseDetail: React.FC = () => {
           </Routes>
         </div>
       </div>
-      
-      {/* 編輯模態框 */}
+
       {showEditModal && (
         <div className="modal" style={{ display: 'block' }}>
           <div className="modal-dialog modal-lg">
@@ -220,8 +219,8 @@ const CourseDetail: React.FC = () => {
               </div>
               <div className="modal-body">
                 {cid && (
-                  <CourseForm 
-                    isModal={true} 
+                  <CourseForm
+                    isModal={true}
                     courseIdToEdit={cid}
                     onSuccess={handleEditSuccess}
                     onCancel={handleCloseEditModal}

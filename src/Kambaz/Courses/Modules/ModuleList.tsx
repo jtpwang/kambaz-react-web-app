@@ -25,7 +25,7 @@ export default function ModuleList() {
   console.log("ModuleList - courseId:", cid);
   console.log("ModuleList - currentUser:", currentUser);
 
-  // 獲取模組列表（使用 useCallback 記憶函數）
+  // Get the module list (using useCallback memoization function)
   const fetchModules = useCallback(async () => {
     if (!cid) {
       console.error("ModuleList - Missing course ID");
@@ -40,9 +40,10 @@ export default function ModuleList() {
       const response = await getAllModules(cid);
       console.log("ModuleList - API Response:", response);
 
-      // 直接檢查模組數據
+
+      // Check module data directly
       if (response && response.data && response.data.modules) {
-        // 根據 order 屬性排序模組
+        // Sort modules by order attribute
         const sortedModules = [...response.data.modules].sort((a, b) => a.order - b.order);
         console.log("ModuleList - Sorted modules:", sortedModules);
         setModules(sortedModules);
@@ -60,11 +61,11 @@ export default function ModuleList() {
 
   useEffect(() => {
     console.log("ModuleList - useEffect triggered");
-    // 獲取模組列表
+    // Get module
     fetchModules();
   }, [fetchModules]);
 
-  // 切換模組的展開/折疊狀態
+  // Switch the module's expanded/collapsed state
   const toggleModuleExpand = (moduleId: string) => {
     setExpandedModules(prev => {
       const newSet = new Set(prev);
@@ -77,29 +78,30 @@ export default function ModuleList() {
     });
   };
 
-  // 折疊全部模組
+  // Collapse all modules
   const collapseAll = () => {
     setExpandedModules(new Set());
   };
 
-  // 展開全部模組
+  // Expand all modules
   const expandAll = () => {
     const allModuleIds = modules.map(module => module._id);
     setExpandedModules(new Set(allModuleIds));
   };
 
-  // 處理模組發布狀態切換
+  // Handle module release status switching
   const handleTogglePublish = async (moduleId: string, currentStatus: boolean) => {
     if (!cid) return;
 
-    // 找到要更新的模組
+    // Find the module to update
     const moduleToUpdate = modules.find(m => m._id === moduleId);
     if (!moduleToUpdate) {
       console.error('ModuleList - Cannot find module to toggle publish status:', moduleId);
       return;
     }
 
-    // 先在 UI 上樂觀地更新狀態，使用戶感受更快的響應
+
+    // Update the status  on the UI first to make the user feel a faster response
     setModules(prev =>
       prev.map(module => {
         if (module._id === moduleId) {
@@ -110,14 +112,15 @@ export default function ModuleList() {
     );
 
     try {
-      // 呼叫 API 更新後端狀態
-      console.log(`正在${!currentStatus ? '發布' : '取消發布'}模組 ${moduleToUpdate.title}`);
+
+      // Call API to update backend status
+      console.log(`Currently ${!currentStatus ? 'publishing' : 'unpublishing'} module ${moduleToUpdate.title}`);
       const updatedModule = await toggleModulePublished(moduleId, !currentStatus);
-      
-      // 確認 API 回應中的發布狀態
-      console.log('收到模組更新響應:', updatedModule);
-      
-      // 使用後端回傳的實際狀態更新 UI（以防止前後端不一致）
+
+      // Confirm the publishing status in the API response
+      console.log('Received module update response:', updatedModule);
+
+      // Update the UI using the actual status returned by the backend (to prevent inconsistency between the front and back ends)
       setModules(prev =>
         prev.map(module => {
           if (module._id === moduleId) {
@@ -126,13 +129,14 @@ export default function ModuleList() {
           return module;
         })
       );
-      
-      // 提示用戶操作成功
+
+
+      // Prompt the user that the operation was successful
       setError(null);
     } catch (err) {
       console.error('ModuleList - Error toggling module published status:', err);
-      
-      // 還原為原始狀態
+
+      // Restore to original state
       setModules(prev =>
         prev.map(module => {
           if (module._id === moduleId) {
@@ -141,13 +145,14 @@ export default function ModuleList() {
           return module;
         })
       );
-      
-      // 顯示錯誤信息
-      setError(err instanceof Error ? err.message : '更新模組狀態失敗，請稍後再試。');
+
+      //Display error message
+      setError(err instanceof Error ? err.message : 'Failed to update module status. Please try again later.');
+
     }
   };
 
-  // 刪除模組
+  // Delete the module
   const handleDeleteModule = async (moduleId: string) => {
     if (!cid) return;
 
@@ -155,7 +160,8 @@ export default function ModuleList() {
       try {
         await deleteModule(moduleId);
 
-        // 從列表中移除已刪除的模組
+
+        // Remove the deleted module from the list
         setModules(prev => prev.filter(module => module._id !== moduleId));
       } catch (err) {
         console.error('ModuleList - Error deleting module:', err);
@@ -164,24 +170,26 @@ export default function ModuleList() {
     }
   };
 
-  // 處理模組更新
+
+  // Handle module updates
   const handleModuleUpdated = async (updatedModule: Module) => {
-    // 更新列表中的模組
+
+    // Update the modules in the list
     setModules(prev =>
       prev.map(module => module._id === updatedModule._id ? updatedModule : module)
     );
-    
-    // 關閉編輯表單
+
+    // Close the edit form
     setEditingModuleId(null);
   };
 
-  // 新增模組後的回調
+  // Callback after adding module
   const handleModuleAdded = (newModule: Module) => {
     setModules(prev => [...prev, newModule].sort((a, b) => a.order - b.order));
     setShowAddForm(false);
   };
 
-  // 取消添加或編輯
+  // Cancel adding or editing
   const handleCancel = () => {
     setShowAddForm(false);
     setEditingModuleId(null);
@@ -197,7 +205,6 @@ export default function ModuleList() {
 
   return (
     <div className="wd-modules">
-      {/* 操作按鈕 */}
       <div className="wd-modules-buttons">
         <button
           className="wd-collapse-all"
@@ -212,7 +219,6 @@ export default function ModuleList() {
           Expand All
         </button>
 
-        {/* 只有有權限的用戶可以看到添加模組按鈕 */}
         {hasEditPermission(currentUser) && (
           <button
             className="wd-add-module"
@@ -225,7 +231,6 @@ export default function ModuleList() {
 
       <hr />
 
-      {/* 添加模組表單 */}
       {showAddForm && cid && (
         <ModuleForm
           courseId={cid}
@@ -234,7 +239,6 @@ export default function ModuleList() {
         />
       )}
 
-      {/* 模組列表 */}
       {modules.length === 0 ? (
         <div className="no-modules">No modules available for this course yet.</div>
       ) : (
@@ -255,7 +259,6 @@ export default function ModuleList() {
         </div>
       )}
 
-      {/* 編輯模組表單 */}
       {editingModuleId && cid && (
         <div className="module-edit-overlay">
           <div className="module-edit-form">
