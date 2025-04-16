@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { API_BASE } from './api';
 
-// 模組內容類型定義
 export enum ContentType {
   TEXT = 'text',
   FILE = 'file',
@@ -10,7 +9,6 @@ export enum ContentType {
   IMAGE = 'image'
 }
 
-// 模組內容介面
 export interface ModuleContent {
   _id: string;
   moduleId: string;
@@ -35,7 +33,6 @@ export interface ApiResponse<T> {
   message?: string;
 }
 
-// 獲取模組的所有內容
 export const getAllModuleContents = async (courseId: string, moduleId: string): Promise<ApiResponse<{ moduleContents: ModuleContent[] }>> => {
   try {
     const response = await axios.get<ApiResponse<{ moduleContents: ModuleContent[] }>>(
@@ -49,7 +46,6 @@ export const getAllModuleContents = async (courseId: string, moduleId: string): 
   }
 };
 
-// 獲取單個內容項目
 export const getModuleContentById = async (courseId: string, moduleId: string, contentId: string): Promise<ModuleContent> => {
   try {
     const response = await axios.get<ApiResponse<ModuleContent>>(
@@ -63,7 +59,6 @@ export const getModuleContentById = async (courseId: string, moduleId: string, c
   }
 };
 
-// 創建新的內容項目
 export const createModuleContent = async (courseId: string, moduleId: string, contentData: ModuleContentInput): Promise<ModuleContent> => {
   try {
     const response = await axios.post<ApiResponse<ModuleContent>>(
@@ -78,7 +73,6 @@ export const createModuleContent = async (courseId: string, moduleId: string, co
   }
 };
 
-// 更新內容項目
 export const updateModuleContent = async (
   courseId: string, 
   moduleId: string, 
@@ -98,7 +92,6 @@ export const updateModuleContent = async (
   }
 };
 
-// 刪除內容項目
 export const deleteModuleContent = async (courseId: string, moduleId: string, contentId: string): Promise<void> => {
   try {
     await axios.delete(
@@ -111,7 +104,6 @@ export const deleteModuleContent = async (courseId: string, moduleId: string, co
   }
 };
 
-// 更新內容順序
 export const updateContentOrder = async (
   courseId: string, 
   moduleId: string, 
@@ -130,7 +122,6 @@ export const updateContentOrder = async (
   }
 };
 
-// 上傳文件作為內容
 export const uploadContentFile = async (file: File): Promise<string> => {
   try {
     const formData = new FormData();

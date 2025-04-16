@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { API_BASE } from './api';
 
-// 定義課程類型介面
 export interface Course {
   _id: string;
   number: string;
@@ -26,10 +25,9 @@ export interface Course {
     content: string;
     createdAt: string;
   }>;
-  isEnrolled?: boolean;  // 添加註冊狀態標記
+  isEnrolled?: boolean;  
 }
 
-// 定義創建/更新課程的資料介面
 export interface CourseInput {
   _id?: string;
   number: string;
@@ -42,7 +40,6 @@ export interface CourseInput {
   credits: number;
 }
 
-// 定義 API 回應介面
 interface ApiResponse<T> {
   success: boolean;
   data: T;
@@ -67,19 +64,19 @@ export const CourseService = {
    */
   getAllCourses: async (page = 1, limit = 10, search = '') => {
     try {
-      console.log('正在獲取課程列表...', { page, limit, search });
+      console.log('getting modules...', { page, limit, search });
       const response = await axios.get<ApiResponse<{ courses: Course[] }>>(`${API_BASE}/api/courses`, {
         params: { page, limit, search },
         withCredentials: true
       });
-      console.log('獲取課程列表成功:', {
+      console.log('getting list:', {
         success: response.data.success,
         coursesCount: response.data.data?.courses?.length || 0
       });
       if (response.data.data?.courses?.length === 0) {
-        console.log('警告: 伺服器返回了空的課程列表');
+        console.log('error');
       } else {
-        console.log('課程ID:', response.data.data?.courses.map(c => c._id).join(', '));
+        console.log('class ID:', response.data.data?.courses.map(c => c._id).join(', '));
       }
       return response.data;
     } catch (error) {
@@ -96,25 +93,24 @@ export const CourseService = {
    */
   getEnrolledCourses: async (page = 1, limit = 10) => {
     try {
-      console.log('正在獲取已註冊課程數據...', { page, limit });
+      console.log('getting registered class...', { page, limit });
       
-      // 使用 "current" 作為 userId 來表示當前登入的用戶
+      // use "current" for userId 
       const response = await axios.get<Course[]>(`${API_BASE}/api/users/current/courses`, {
         params: { page, limit },
         withCredentials: true
       });
       
-      console.log('已註冊課程數據獲取成功:', {
+      console.log('registered class:', {
         coursesCount: response.data?.length || 0
       });
       
       if (response.data?.length === 0) {
-        console.log('用戶沒有註冊任何課程');
+        console.log('user do not have registered classes');
       } else {
-        console.log('已註冊課程 ID 列表:', response.data?.map(c => c._id).join(', '));
+        console.log('registered class ID list:', response.data?.map(c => c._id).join(', '));
       }
       
-      // 返回統一格式的資料
       return {
         success: true,
         data: { 
@@ -122,7 +118,7 @@ export const CourseService = {
         }
       };
     } catch (error) {
-      console.error('獲取已註冊課程失敗:', error);
+      console.error('failed to get registered classes:', error);
       throw error;
     }
   },
@@ -204,8 +200,6 @@ export const CourseService = {
   enrollInCourse: async (courseId: string) => {
     try {
       console.log(`Enrolling in course: ${courseId}`);
-      
-      // 移除 MongoDB ObjectID 格式驗證，因為系統使用自定義ID格式
       
       const response = await axios.post<ApiResponse<{ enrolled: boolean }>>(`${API_BASE}/api/courses/${courseId}/enroll`, {}, {
         withCredentials: true

@@ -35,34 +35,34 @@ export interface ApiResponse<T> {
 // Get all assignments for a course
 export const getAllAssignments = async (courseId: string): Promise<ApiResponse<{ assignments: Assignment[] }>> => {
   try {
-    // 記錄 API 調用
-    console.log(`正在獲取課程 ${courseId} 的作業，API 路徑: ${API_BASE}/api/courses/${courseId}/assignments`);
-    
+    // Log API call
+    console.log(`Fetching assignments for course ${courseId}, API path: ${API_BASE}/api/courses/${courseId}/assignments`);
+
     const response = await axios.get(
       `${API_BASE}/api/courses/${courseId}/assignments`,
       { withCredentials: true }
     );
 
-    console.log("後端回應的原始數據:", response.data);
+    console.log("Raw data from backend response:", response.data);
 
-    // 檢查後端回應格式
+    // Check backend response format
     const { assignments = [], pagination: _pagination = {} } = response.data || {};
     // const { assignments = [], pagination = {} } = response.data || {};
 
 
-    // 無論後端回應如何，我們都轉換為前端需要的格式
+    // Normalize response format for frontend usage
     return {
       success: true,
       data: { assignments: Array.isArray(assignments) ? assignments : [] },
-      message: "作業載入成功"
+      message: "Assignments loaded successfully"
     };
   } catch (error) {
     console.error('Error fetching assignments:', error);
-    // 返回一個錯誤格式的回應
+    // Return error response format
     return {
       success: false,
       data: { assignments: [] },
-      message: error instanceof Error ? error.message : "獲取作業時發生未知錯誤"
+      message: error instanceof Error ? error.message : "Unknown error occurred while fetching assignments"
     };
   }
 };
@@ -70,17 +70,17 @@ export const getAllAssignments = async (courseId: string): Promise<ApiResponse<{
 // Get a single assignment by ID
 export const getAssignmentById = async (courseId: string, assignmentId: string): Promise<Assignment> => {
   try {
-    console.log(`獲取作業詳細資訊，課程ID: ${courseId}，作業ID: ${assignmentId}`);
-    
-    // 修正 API 路徑 - 使用正確的後端端點 /api/assignments/:assignmentId
+    console.log(`Fetching assignment details, course ID: ${courseId}, assignment ID: ${assignmentId}`);
+
+    // Correct API path - use proper backend endpoint /api/assignments/:assignmentId
     const response = await axios.get(
       `${API_BASE}/api/assignments/${assignmentId}`,
       { withCredentials: true }
     );
 
-    console.log("獲取單個作業的回應:", response.data);
-    
-    // 直接返回後端回應的數據
+    console.log("Response for fetching single assignment:", response.data);
+
+    // Return backend response data directly
     return response.data;
   } catch (error) {
     console.error(`Error fetching assignment with ID ${assignmentId}:`, error);
@@ -91,17 +91,17 @@ export const getAssignmentById = async (courseId: string, assignmentId: string):
 // Create a new assignment
 export const createAssignment = async (courseId: string, assignmentData: AssignmentInput): Promise<Assignment> => {
   try {
-    console.log(`創建新作業，課程 ID: ${courseId}`, assignmentData);
-    
+    console.log(`Creating new assignment, course ID: ${courseId}`, assignmentData);
+
     const response = await axios.post(
       `${API_BASE}/api/courses/${courseId}/assignments`,
       assignmentData,
       { withCredentials: true }
     );
 
-    console.log("創建作業的回應:", response.data);
-    
-    // 直接返回後端回應的數據
+    console.log("Response from creating assignment:", response.data);
+
+    // Return backend response data directly
     return response.data;
   } catch (error) {
     console.error('Error creating assignment:', error);
@@ -113,17 +113,17 @@ export const createAssignment = async (courseId: string, assignmentData: Assignm
 export const updateAssignment = async (courseId: string, assignmentId: string, assignmentData: AssignmentInput): Promise<Assignment> => {
   try {
     console.log(`更新作業，課程ID: ${courseId}，作業ID: ${assignmentId}`, assignmentData);
-    
-    // 修正 API 路徑 - 使用正確的後端端點 /api/assignments/:assignmentId
+
+    // Correct API path
     const response = await axios.put(
       `${API_BASE}/api/assignments/${assignmentId}`,
       assignmentData,
       { withCredentials: true }
     );
 
-    console.log("更新作業的回應:", response.data);
-    
-    // 直接返回後端回應的數據
+    console.log("Response from updating assignment:", response.data);
+
+    // Return backend response data directly
     return response.data;
   } catch (error) {
     console.error(`Error updating assignment with ID ${assignmentId}:`, error);
@@ -134,15 +134,15 @@ export const updateAssignment = async (courseId: string, assignmentId: string, a
 // Delete an assignment
 export const deleteAssignment = async (courseId: string, assignmentId: string): Promise<void> => {
   try {
-    console.log(`刪除作業，課程ID: ${courseId}，作業ID: ${assignmentId}`);
-    
-    // 修正 API 路徑 - 使用正確的後端端點 /api/assignments/:assignmentId
+    console.log(`Deleting assignment, course ID: ${courseId}, assignment ID: ${assignmentId}`);
+
+    // Correct API path - use proper backend endpoint /api/assignments/:assignmentId
     await axios.delete(
       `${API_BASE}/api/assignments/${assignmentId}`,
       { withCredentials: true }
     );
-    
-    console.log("作業已成功刪除");
+
+    console.log("Assignment deleted successfully");
   } catch (error) {
     console.error(`Error deleting assignment with ID ${assignmentId}:`, error);
     throw error;
@@ -152,18 +152,18 @@ export const deleteAssignment = async (courseId: string, assignmentId: string): 
 // Toggle assignment publication status
 export const toggleAssignmentPublished = async (courseId: string, assignmentId: string, isPublished: boolean): Promise<Assignment> => {
   try {
-    console.log(`切換作業發佈狀態，課程ID: ${courseId}，作業ID: ${assignmentId}，新狀態: ${isPublished}`);
-    
-    // 修正 API 路徑 - 使用正確的後端端點 /api/assignments/:assignmentId/publish
+    console.log(`Toggling assignment publish status, course ID: ${courseId}, assignment ID: ${assignmentId}, new status: ${isPublished}`);
+
+    // Correct API path - use proper backend endpoint /api/assignments/:assignmentId/publish
     const response = await axios.put(
       `${API_BASE}/api/assignments/${assignmentId}/publish`,
       { isPublished },
       { withCredentials: true }
     );
 
-    console.log("切換作業發佈狀態的回應:", response.data);
-    
-    // 直接返回後端回應的數據
+    console.log("Response from toggling publish status:", response.data);
+
+    // Return backend response data directly
     return response.data;
   } catch (error) {
     console.error(`Error toggling published status for assignment with ID ${assignmentId}:`, error);
